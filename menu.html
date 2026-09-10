@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Cookies — Crumb & Co.</title>
+  <meta name="description" content="Browse our full menu of artisan cookies — from classic chocolate chip to brown butter snickerdoodle and seasonal specials.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-brand"><span class="brand-mark">Crumb <span class="amp">&</span> Co.</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="menu.html" class="nav-link active">Our Cookies</a></li>
+      <li><a href="about.html" class="nav-link">Our Story</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="order.html" class="nav-link nav-cta">Order Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="menu-hero">
+  <span class="section-eyebrow" style="display:block;margin-bottom:0.8rem">The Full Collection</span>
+  <h1 style="font-family:var(--serif);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:600;color:var(--chocolate);margin-bottom:1rem">Our Cookies</h1>
+  <p>Every cookie is hand-mixed, hand-cut, and hand-packed. Made fresh daily in our Mumbai kitchen.</p>
+</section>
+
+<div class="container">
+  <div class="menu-filters">
+    <button class="filter-btn active" data-filter="all">All Cookies</button>
+    <button class="filter-btn" data-filter="classic">Classic</button>
+    <button class="filter-btn" data-filter="chocolate">Chocolate</button>
+    <button class="filter-btn" data-filter="seasonal">Seasonal</button>
+    <button class="filter-btn" data-filter="vegan">Vegan</button>
+  </div>
+</div>
+
+<div class="menu-grid">
+
+  <div class="menu-item fade-in" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#3d2817,#6b4226)">
+      <div class="cookie-visual"><div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div></div>
+      <span class="menu-item-tag">Bestseller</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Triple Chocolate Chunk</h3>
+      <p>Dark, milk, and white Belgian chocolate in our signature brown-butter dough.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹180</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#5c3a1e,#8b6543)">
+      <div class="cookie-visual"><div class="cookie-disc salted-caramel"><div class="drizzle"></div></div></div>
+      <span class="menu-item-tag">Limited</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Salted Caramel Crumble</h3>
+      <p>Slow-cooked caramel, Maldon sea salt, buttery shortbread crumble.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹220</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#7b3f00,#daa520)">
+      <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div></div>
+      <span class="menu-item-tag">New</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Brown Butter Snickerdoodle</h3>
+      <p>Nutty brown butter, cinnamon sugar crust, pillowy soft centre.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹200</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#2d1f17,#4a2d18)">
+      <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#5c3a1e,#3d2817 60%,#1a0d05)"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div></div></div>
+    </div>
+    <div class="menu-item-info">
+      <h3>Double Dark Cocoa</h3>
+      <p>72% dark cocoa dough with chunks of single-origin chocolate.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹240</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#8b6543,#c4a35a)">
+      <div class="cookie-visual"><div class="cookie-disc golden"></div></div>
+    </div>
+    <div class="menu-item-info">
+      <h3>Madagascar Vanilla Bean</h3>
+      <p>Real vanilla bean paste in a tender, melt-in-your-mouth butter cookie.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹190</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="seasonal">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#6b4226,#c4a35a)">
+      <div class="cookie-visual"><div class="cookie-disc salted-caramel"><div class="drizzle"></div></div></div>
+      <span class="menu-item-tag">Seasonal</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Pistachio Cardamom</h3>
+      <p>Roasted Iranian pistachios, green cardamom, touch of rose water.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹260</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="vegan">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#4a2d18,#8b6543)">
+      <div class="cookie-visual"><div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div></div>
+      <span class="menu-item-tag">Vegan</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Vegan Chocolate Chunk</h3>
+      <p>Oat milk dough, dairy-free dark chocolate, coconut oil. 100% plant-based.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹210</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#3d2817,#6b4226)">
+      <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#6b4226,#4a2d18)"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div></div></div>
+    </div>
+    <div class="menu-item-info">
+      <h3>Mocha Chip</h3>
+      <p>Espresso-infused dough, dark chocolate chunks, cracked cocoa nibs.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹230</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="seasonal">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#c4a35a,#daa520)">
+      <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div></div>
+      <span class="menu-item-tag">Seasonal</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Honey Almond Oat</h3>
+      <p>Wildflower honey, toasted almonds, rolled oats, hint of cinnamon.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹220</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="vegan">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#7b3f00,#b8860b)">
+      <div class="cookie-visual"><div class="cookie-disc golden"></div></div>
+      <span class="menu-item-tag">Vegan</span>
+    </div>
+    <div class="menu-item-info">
+      <h3>Oatmeal Raisin (Vegan)</h3>
+      <p>Plump golden raisins, maple syrup, cinnamon, all-plant ingredients.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹190</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#c4a35a,#daa520)">
+      <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div></div></div>
+    </div>
+    <div class="menu-item-info">
+      <h3>White Chocolate Macadamia</h3>
+      <p>Buttery white chocolate, roasted macadamia nuts, golden vanilla dough.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹250</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-item fade-in" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,#1a0d05,#3d2817)">
+      <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#3d2817,#1a0d05)"><div class="chip c1" style="background:#c4a35a"></div><div class="chip c2" style="background:#c4a35a"></div><div class="chip c3" style="background:#c4a35a"></div></div></div>
+    </div>
+    <div class="menu-item-info">
+      <h3>Cookies & Cream</h3>
+      <p>Dark cocoa dough studded with crushed cream biscuit pieces.</p>
+      <div class="menu-item-row">
+        <span class="menu-item-price">₹210</span>
+        <button class="add-btn"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col footer-brand-col">
+        <h3 class="footer-brand">Crumb <span class="amp">&</span> Co.</h3>
+        <p>Artisan cookies baked with soul. Small batch, big flavour.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Order</h4>
+        <ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Get in Touch</h4>
+        <ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Crumb & Co. — Baked with love in Mumbai.</p></div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
