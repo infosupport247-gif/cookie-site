@@ -13,25 +13,17 @@
 </head>
 <body>
 
-<!-- Preloader -->
 <div class="preloader">
-  <div class="preloader-cookie">
-    <div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div>
-  </div>
+  <div class="preloader-cookie"><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div></div>
   <div class="preloader-text">Crumb & Co.</div>
   <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
 </div>
-
-<!-- Scroll Progress -->
 <div class="progress-bar"><div class="progress-fill"></div></div>
 
-<!-- Navigation -->
 <nav class="navbar" id="navbar">
   <div class="nav-container">
     <a href="index.html" class="nav-brand">Crumb <span class="amp">&</span> Co.</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-menu" id="navMenu">
       <li><a href="index.html" class="nav-link active">Home</a></li>
       <li><a href="menu.html" class="nav-link">Our Cookies</a></li>
@@ -42,8 +34,9 @@
   </div>
 </nav>
 
-<!-- Hero -->
-<section class="hero">
+<!-- Hero with real image -->
+<section class="hero hero-image" style="background-image:url('images/cookies-plate-5.jpg')">
+  <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-eyebrow"><i class="fas fa-cookie-bite"></i> Artisan Cookie Bakery · Est. 2018</div>
     <h1 class="hero-title">
@@ -75,10 +68,7 @@
       </div>
     </div>
   </div>
-  <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="scroll-mouse"></div>
-  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-mouse"></div></div>
 </section>
 
 <!-- Marquee -->
@@ -89,7 +79,7 @@
   </div>
 </div>
 
-<!-- Featured -->
+<!-- Featured with real images -->
 <section class="section featured-section">
   <div class="container">
     <div class="section-header">
@@ -100,10 +90,7 @@
     <div class="featured-grid">
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,rgba(61,40,23,0.6),rgba(107,66,38,0.3))">
-          <div class="cookie-visual">
-            <div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div>
-          </div>
+        <div class="featured-img" style="background-image:url('images/cookies-plate-1.jpg')">
           <div class="featured-badge">#1 Bestseller</div>
         </div>
         <div class="featured-info">
@@ -118,10 +105,7 @@
       </div>
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,rgba(92,58,30,0.6),rgba(196,163,90,0.2))">
-          <div class="cookie-visual">
-            <div class="cookie-disc salted-caramel"><div class="drizzle"></div></div>
-          </div>
+        <div class="featured-img" style="background-image:url('images/cookies-box-1.jpg')">
           <div class="featured-badge">Limited</div>
         </div>
         <div class="featured-info">
@@ -136,10 +120,7 @@
       </div>
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,rgba(123,63,0,0.6),rgba(218,165,32,0.2))">
-          <div class="cookie-visual">
-            <div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div>
-          </div>
+        <div class="featured-img" style="background-image:url('images/homemade-cookies.jpg')">
           <div class="featured-badge">New</div>
         </div>
         <div class="featured-info">
@@ -153,6 +134,25 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- Split feature section -->
+<section class="section split-feature-section">
+  <div class="split-feature">
+    <div class="split-feature-img" style="background-image:url('images/cookies-box-2.jpg')"></div>
+    <div class="split-feature-content reveal">
+      <span class="section-eyebrow">Crafted Daily</span>
+      <h2 class="split-title">Every Cookie<br>Starts With Real Butter</h2>
+      <p class="split-desc">We never use margarine, oil, or artificial shortcuts. Every batch begins with European-style butter, Belgian chocolate, and vanilla from Madagascar. That's not marketing — that's the recipe.</p>
+      <div class="split-features">
+        <div class="split-feature-item"><i class="fas fa-check-circle"></i> 100% real butter, no margarine</div>
+        <div class="split-feature-item"><i class="fas fa-check-circle"></i> Belgian & single-origin chocolate</div>
+        <div class="split-feature-item"><i class="fas fa-check-circle"></i> Madagascar vanilla bean paste</div>
+        <div class="split-feature-item"><i class="fas fa-check-circle"></i> Hand-mixed in small batches</div>
+      </div>
+      <a href="menu.html" class="btn btn-primary"><span>See All Flavours</span> <i class="fas fa-arrow-right"></i></a>
     </div>
   </div>
 </section>
@@ -190,6 +190,26 @@
   </div>
 </section>
 
+<!-- Gallery preview -->
+<section class="section gallery-preview-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Straight From The Kitchen</span>
+      <h2 class="section-title">Recent Bakes</h2>
+    </div>
+    <div class="gallery-preview-grid">
+      <div class="gp-item reveal" style="background-image:url('images/cookies-plate-3.jpg')"></div>
+      <div class="gp-item reveal reveal-delay-1" style="background-image:url('images/heart-cookies-1.jpg')"></div>
+      <div class="gp-item reveal reveal-delay-2" style="background-image:url('images/cookies-jar.jpg')"></div>
+      <div class="gp-item reveal reveal-delay-3" style="background-image:url('images/cookies-plate-4.jpg')"></div>
+      <div class="gp-item reveal" style="background-image:url('images/gingerbread-cut-1.jpg')"></div>
+    </div>
+    <div style="text-align:center;margin-top:3rem">
+      <a href="gallery.html" class="btn btn-outline">View Full Gallery <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
 <!-- Testimonial -->
 <section class="section testimonial-section">
   <div class="container">
@@ -200,14 +220,9 @@
       </blockquote>
       <div class="testimonial-author">
         <div class="author-avatar">A</div>
-        <div class="author-info">
-          <strong>Ananya Patel</strong>
-          <span>Mumbai · Verified Customer</span>
-        </div>
+        <div class="author-info"><strong>Ananya Patel</strong><span>Mumbai · Verified Customer</span></div>
       </div>
-      <div class="testimonial-rating">
-        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-      </div>
+      <div class="testimonial-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
     </div>
   </div>
 </section>
@@ -215,24 +230,17 @@
 <!-- CTA -->
 <section class="section cta-section">
   <div class="container">
-    <div class="cta-box reveal">
+    <div class="cta-box reveal" style="background-image:url('images/cookies-plate-6.jpg')">
+      <div class="cta-overlay"></div>
       <div class="cta-content">
         <h2>Ready to Taste<br>the Difference?</h2>
         <p>Order a box today and experience cookies the way they should be — buttery, gooey, and impossibly good.</p>
         <a href="order.html" class="btn btn-primary btn-lg"><span>Place Your Order</span> <i class="fas fa-arrow-right"></i></a>
       </div>
-      <div class="cta-visual">
-        <div class="cookie-stack">
-          <div class="stack-cookie c1"></div>
-          <div class="stack-cookie c2"></div>
-          <div class="stack-cookie c3"></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- Footer -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -246,37 +254,11 @@
           <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
         </div>
       </div>
-      <div class="footer-col">
-        <h4>Explore</h4>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="menu.html">Our Cookies</a></li>
-          <li><a href="about.html">Our Story</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Order</h4>
-        <ul>
-          <li><a href="order.html">Place Order</a></li>
-          <li><a href="order.html">Gift Boxes</a></li>
-          <li><a href="order.html">Custom Orders</a></li>
-          <li><a href="order.html">Bulk & Corporate</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Get in Touch</h4>
-        <ul>
-          <li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li>
-          <li><i class="fas fa-phone"></i> +91 98765 43210</li>
-          <li><i class="fas fa-envelope"></i> hello@crumbandco.in</li>
-          <li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li>
-        </ul>
-      </div>
+      <div class="footer-col"><h4>Explore</h4><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+      <div class="footer-col"><h4>Order</h4><ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul></div>
+      <div class="footer-col"><h4>Get in Touch</h4><ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul></div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 Crumb & Co. — Baked with love in Mumbai.</p>
-    </div>
+    <div class="footer-bottom"><p>© 2026 Crumb & Co. — Baked with love in Mumbai.</p></div>
   </div>
 </footer>
 
