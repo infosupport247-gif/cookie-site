@@ -1,4 +1,4 @@
-// Crumb & Co. — Premium Edition v2
+// CRAVELY — Made to Be Craved
 
 // --- Preloader ---
 window.addEventListener('load', () => {
