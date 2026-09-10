@@ -13,9 +13,16 @@
 </head>
 <body>
 
+<div class="preloader">
+  <div class="preloader-cookie"><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div></div>
+  <div class="preloader-text">Crumb & Co.</div>
+  <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+</div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+
 <nav class="navbar scrolled" id="navbar">
   <div class="nav-container">
-    <a href="index.html" class="nav-brand"><span class="brand-mark">Crumb <span class="amp">&</span> Co.</span></a>
+    <a href="index.html" class="nav-brand">Crumb <span class="amp">&</span> Co.</a>
     <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-menu" id="navMenu">
       <li><a href="index.html" class="nav-link">Home</a></li>
@@ -28,8 +35,8 @@
 </nav>
 
 <section class="menu-hero">
-  <span class="section-eyebrow" style="display:block;margin-bottom:0.8rem">The Full Collection</span>
-  <h1 style="font-family:var(--serif);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:600;color:var(--chocolate);margin-bottom:1rem">Our Cookies</h1>
+  <span class="section-eyebrow" style="display:block;margin-bottom:0.8rem;opacity:1;transform:none">The Full Collection</span>
+  <h1>Our Cookies</h1>
   <p>Every cookie is hand-mixed, hand-cut, and hand-packed. Made fresh daily in our Mumbai kitchen.</p>
 </section>
 
@@ -45,8 +52,8 @@
 
 <div class="menu-grid">
 
-  <div class="menu-item fade-in" data-category="classic">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#3d2817,#6b4226)">
+  <div class="menu-item" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(61,40,23,0.5),rgba(107,66,38,0.2))">
       <div class="cookie-visual"><div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div></div>
       <span class="menu-item-tag">Bestseller</span>
     </div>
@@ -60,8 +67,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="classic">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#5c3a1e,#8b6543)">
+  <div class="menu-item" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(92,58,30,0.5),rgba(139,101,67,0.2))">
       <div class="cookie-visual"><div class="cookie-disc salted-caramel"><div class="drizzle"></div></div></div>
       <span class="menu-item-tag">Limited</span>
     </div>
@@ -75,8 +82,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="classic">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#7b3f00,#daa520)">
+  <div class="menu-item" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(123,63,0,0.5),rgba(218,165,32,0.2))">
       <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div></div>
       <span class="menu-item-tag">New</span>
     </div>
@@ -90,8 +97,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="chocolate">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#2d1f17,#4a2d18)">
+  <div class="menu-item" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(45,31,23,0.6),rgba(74,45,24,0.2))">
       <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#5c3a1e,#3d2817 60%,#1a0d05)"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div></div></div>
     </div>
     <div class="menu-item-info">
@@ -104,8 +111,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="classic">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#8b6543,#c4a35a)">
+  <div class="menu-item" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(139,101,67,0.4),rgba(196,163,90,0.2))">
       <div class="cookie-visual"><div class="cookie-disc golden"></div></div>
     </div>
     <div class="menu-item-info">
@@ -118,8 +125,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="seasonal">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#6b4226,#c4a35a)">
+  <div class="menu-item" data-category="seasonal">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(107,66,38,0.4),rgba(196,163,90,0.2))">
       <div class="cookie-visual"><div class="cookie-disc salted-caramel"><div class="drizzle"></div></div></div>
       <span class="menu-item-tag">Seasonal</span>
     </div>
@@ -133,8 +140,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="vegan">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#4a2d18,#8b6543)">
+  <div class="menu-item" data-category="vegan">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(74,45,24,0.4),rgba(139,101,67,0.2))">
       <div class="cookie-visual"><div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div></div>
       <span class="menu-item-tag">Vegan</span>
     </div>
@@ -148,8 +155,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="chocolate">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#3d2817,#6b4226)">
+  <div class="menu-item" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(61,40,23,0.5),rgba(107,66,38,0.2))">
       <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#6b4226,#4a2d18)"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div></div></div>
     </div>
     <div class="menu-item-info">
@@ -162,8 +169,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="seasonal">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#c4a35a,#daa520)">
+  <div class="menu-item" data-category="seasonal">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(196,163,90,0.3),rgba(218,165,32,0.15))">
       <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div></div>
       <span class="menu-item-tag">Seasonal</span>
     </div>
@@ -177,8 +184,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="vegan">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#7b3f00,#b8860b)">
+  <div class="menu-item" data-category="vegan">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(123,63,0,0.4),rgba(184,134,11,0.15))">
       <div class="cookie-visual"><div class="cookie-disc golden"></div></div>
       <span class="menu-item-tag">Vegan</span>
     </div>
@@ -192,8 +199,8 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="classic">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#c4a35a,#daa520)">
+  <div class="menu-item" data-category="classic">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(196,163,90,0.25),rgba(218,165,32,0.1))">
       <div class="cookie-visual"><div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div></div></div>
     </div>
     <div class="menu-item-info">
@@ -206,9 +213,9 @@
     </div>
   </div>
 
-  <div class="menu-item fade-in" data-category="chocolate">
-    <div class="menu-item-img" style="background:linear-gradient(135deg,#1a0d05,#3d2817)">
-      <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#3d2817,#1a0d05)"><div class="chip c1" style="background:#c4a35a"></div><div class="chip c2" style="background:#c4a35a"></div><div class="chip c3" style="background:#c4a35a"></div></div></div>
+  <div class="menu-item" data-category="chocolate">
+    <div class="menu-item-img" style="background:linear-gradient(135deg,rgba(26,13,5,0.6),rgba(61,40,23,0.2))">
+      <div class="cookie-visual"><div class="cookie-disc" style="background:radial-gradient(circle at 35% 35%,#3d2817,#1a0d05)"><div class="chip c1" style="background:#d4a657"></div><div class="chip c2" style="background:#d4a657"></div><div class="chip c3" style="background:#d4a657"></div></div></div>
     </div>
     <div class="menu-item-info">
       <h3>Cookies & Cream</h3>
@@ -221,6 +228,26 @@
   </div>
 
 </div>
+
+<!-- CTA -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-content">
+        <h2>Can't Decide?<br>Try Them All.</h2>
+        <p>Our mixed box lets you sample every flavour. The perfect gift — or treat for yourself.</p>
+        <a href="order.html" class="btn btn-primary btn-lg"><span>Build Your Box</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="cta-visual">
+        <div class="cookie-stack">
+          <div class="stack-cookie c1"></div>
+          <div class="stack-cookie c2"></div>
+          <div class="stack-cookie c3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer class="footer">
   <div class="container">
@@ -235,18 +262,9 @@
           <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
         </div>
       </div>
-      <div class="footer-col">
-        <h4>Explore</h4>
-        <ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul>
-      </div>
-      <div class="footer-col">
-        <h4>Order</h4>
-        <ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul>
-      </div>
-      <div class="footer-col">
-        <h4>Get in Touch</h4>
-        <ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul>
-      </div>
+      <div class="footer-col"><h4>Explore</h4><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+      <div class="footer-col"><h4>Order</h4><ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul></div>
+      <div class="footer-col"><h4>Get in Touch</h4><ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Crumb & Co. — Baked with love in Mumbai.</p></div>
   </div>

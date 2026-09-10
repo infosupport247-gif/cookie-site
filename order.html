@@ -13,9 +13,16 @@
 </head>
 <body>
 
+<div class="preloader">
+  <div class="preloader-cookie"><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div></div>
+  <div class="preloader-text">Crumb & Co.</div>
+  <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+</div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+
 <nav class="navbar scrolled" id="navbar">
   <div class="nav-container">
-    <a href="index.html" class="nav-brand"><span class="brand-mark">Crumb <span class="amp">&</span> Co.</span></a>
+    <a href="index.html" class="nav-brand">Crumb <span class="amp">&</span> Co.</a>
     <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-menu" id="navMenu">
       <li><a href="index.html" class="nav-link">Home</a></li>
@@ -28,21 +35,21 @@
 </nav>
 
 <section class="order-hero">
-  <span class="section-eyebrow" style="display:block;margin-bottom:0.8rem">Fresh-Baked & Delivered</span>
+  <span class="section-eyebrow" style="display:block;margin-bottom:0.8rem;opacity:1;transform:none">Fresh-Baked & Delivered</span>
   <h1>Place Your Order</h1>
   <p>Baked fresh the morning we ship. Vacuum-sealed for freshness. Delivered pan-India.</p>
 </section>
 
 <section class="order-section">
-  <div class="order-box">
+  <div class="order-box reveal">
     <form id="orderForm" action="https://formsubmit.co/infosupport247@gmail.com" method="POST">
       <input type="hidden" name="_subject" value="New Cookie Order — Crumb & Co.">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_next" value="https://infosupport247-gif.github.io/cookie-site/">
 
-      <h2 style="font-family:var(--serif);font-size:1.8rem;font-weight:600;color:var(--chocolate);margin-bottom:0.5rem">Your Details</h2>
-      <p style="color:var(--ink-soft);font-size:0.9rem;margin-bottom:2rem">We'll send a confirmation with delivery tracking to your email.</p>
+      <h2>Your Details</h2>
+      <p>We'll send a confirmation with delivery tracking to your email.</p>
 
       <div class="form-row">
         <div class="form-group">
@@ -65,8 +72,8 @@
         <textarea name="address" placeholder="Flat / Building, Street, Area, City, PIN" required></textarea>
       </div>
 
-      <h2 style="font-family:var(--serif);font-size:1.8rem;font-weight:600;color:var(--chocolate);margin:2rem 0 0.5rem">Your Cookie Box</h2>
-      <p style="color:var(--ink-soft);font-size:0.9rem;margin-bottom:2rem">Pick your flavours and tell us the quantity. Boxes come in sets of 6.</p>
+      <h2 style="margin-top:2rem">Your Cookie Box</h2>
+      <p>Pick your flavours and tell us the quantity. Boxes come in sets of 6.</p>
 
       <div class="form-row">
         <div class="form-group">
@@ -106,27 +113,13 @@
 
       <div class="order-summary">
         <h3>Order Summary</h3>
-        <div class="order-summary-row">
-          <span>Cookie Box (6 cookies)</span>
-          <span>₹180 – ₹260 / box</span>
-        </div>
-        <div class="order-summary-row">
-          <span>Delivery (Mumbai)</span>
-          <span>₹40</span>
-        </div>
-        <div class="order-summary-row">
-          <span>Delivery (Rest of India)</span>
-          <span>₹80</span>
-        </div>
-        <div class="order-summary-row">
-          <span>Total</span>
-          <span>Calculated after selection</span>
-        </div>
+        <div class="order-summary-row"><span>Cookie Box (6 cookies)</span><span>₹180 – ₹260 / box</span></div>
+        <div class="order-summary-row"><span>Delivery (Mumbai)</span><span>₹40</span></div>
+        <div class="order-summary-row"><span>Delivery (Rest of India)</span><span>₹80</span></div>
+        <div class="order-summary-row"><span>Total</span><span>Calculated after selection</span></div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg order-submit">
-        Place Order <i class="fas fa-arrow-right"></i>
-      </button>
+      <button type="submit" class="btn btn-primary btn-lg order-submit"><span>Place Order</span> <i class="fas fa-arrow-right"></i></button>
     </form>
 
     <div class="order-success" id="orderSuccess">
@@ -151,18 +144,9 @@
           <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
         </div>
       </div>
-      <div class="footer-col">
-        <h4>Explore</h4>
-        <ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul>
-      </div>
-      <div class="footer-col">
-        <h4>Order</h4>
-        <ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul>
-      </div>
-      <div class="footer-col">
-        <h4>Get in Touch</h4>
-        <ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul>
-      </div>
+      <div class="footer-col"><h4>Explore</h4><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Our Cookies</a></li><li><a href="about.html">Our Story</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+      <div class="footer-col"><h4>Order</h4><ul><li><a href="order.html">Place Order</a></li><li><a href="order.html">Gift Boxes</a></li><li><a href="order.html">Custom Orders</a></li><li><a href="order.html">Bulk & Corporate</a></li></ul></div>
+      <div class="footer-col"><h4>Get in Touch</h4><ul><li><i class="fas fa-map-marker-alt"></i> Bandra West, Mumbai</li><li><i class="fas fa-phone"></i> +91 98765 43210</li><li><i class="fas fa-envelope"></i> hello@crumbandco.in</li><li><i class="fas fa-clock"></i> Tue–Sun, 9 AM – 7 PM</li></ul></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Crumb & Co. — Baked with love in Mumbai.</p></div>
   </div>

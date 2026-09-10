@@ -13,12 +13,22 @@
 </head>
 <body>
 
+<!-- Preloader -->
+<div class="preloader">
+  <div class="preloader-cookie">
+    <div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div>
+  </div>
+  <div class="preloader-text">Crumb & Co.</div>
+  <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+</div>
+
+<!-- Scroll Progress -->
+<div class="progress-bar"><div class="progress-fill"></div></div>
+
 <!-- Navigation -->
 <nav class="navbar" id="navbar">
   <div class="nav-container">
-    <a href="index.html" class="nav-brand">
-      <span class="brand-mark">Crumb <span class="amp">&</span> Co.</span>
-    </a>
+    <a href="index.html" class="nav-brand">Crumb <span class="amp">&</span> Co.</a>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -32,48 +42,54 @@
   </div>
 </nav>
 
-<!-- Hero Section -->
+<!-- Hero -->
 <section class="hero">
-  <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow"><i class="fas fa-cookie-bite"></i> Artisan Cookie Bakery</div>
+    <div class="hero-eyebrow"><i class="fas fa-cookie-bite"></i> Artisan Cookie Bakery · Est. 2018</div>
     <h1 class="hero-title">
-      Cookies Worth<br><span class="hero-script">Crumbing</span> Over
+      <span class="line"><span class="line-inner">Cookies Worth</span></span>
+      <span class="line"><span class="line-inner"><span class="hero-script">Crumbing</span> Over</span></span>
     </h1>
     <p class="hero-subtitle">
       Hand-crafted in small batches with the world's finest ingredients.
       Real butter, Belgian chocolate, Madagascar vanilla — never anything artificial.
     </p>
     <div class="hero-actions">
-      <a href="menu.html" class="btn btn-primary">
-        Explore Our Cookies <i class="fas fa-arrow-right"></i>
-      </a>
+      <a href="menu.html" class="btn btn-primary"><span>Explore Our Cookies</span> <i class="fas fa-arrow-right"></i></a>
       <a href="about.html" class="btn btn-outline">Our Story</a>
     </div>
     <div class="hero-stats">
       <div class="stat">
-        <span class="stat-num">12+</span>
+        <span class="stat-num" data-count="12" data-suffix="+">12+</span>
         <span class="stat-label">Signature Flavours</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-num">100%</span>
+        <span class="stat-num" data-count="100" data-suffix="%">100%</span>
         <span class="stat-label">Real Butter</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-num">2018</span>
-        <span class="stat-label">Since</span>
+        <span class="stat-num" data-count="50" data-suffix="K+">50K+</span>
+        <span class="stat-label">Cookies Baked</span>
       </div>
     </div>
   </div>
   <div class="hero-scroll">
     <span>Scroll</span>
-    <div class="scroll-line"></div>
+    <div class="scroll-mouse"></div>
   </div>
 </section>
 
-<!-- Featured Cookies Section -->
+<!-- Marquee -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-item">Real Butter <i class="fas fa-cookie-bite"></i> Belgian Chocolate <i class="fas fa-cookie-bite"></i> Madagascar Vanilla <i class="fas fa-cookie-bite"></i> Small Batch <i class="fas fa-cookie-bite"></i> Hand-Cut <i class="fas fa-cookie-bite"></i> Zero Preservatives <i class="fas fa-cookie-bite"></i></div>
+    <div class="marquee-item">Real Butter <i class="fas fa-cookie-bite"></i> Belgian Chocolate <i class="fas fa-cookie-bite"></i> Madagascar Vanilla <i class="fas fa-cookie-bite"></i> Small Batch <i class="fas fa-cookie-bite"></i> Hand-Cut <i class="fas fa-cookie-bite"></i> Zero Preservatives <i class="fas fa-cookie-bite"></i></div>
+  </div>
+</div>
+
+<!-- Featured -->
 <section class="section featured-section">
   <div class="container">
     <div class="section-header">
@@ -84,8 +100,8 @@
     <div class="featured-grid">
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,#3d2817 0%,#6b4226 50%,#8b6543 100%)">
-          <div class="cookie-visual chocolate-chip">
+        <div class="featured-img" style="background:linear-gradient(135deg,rgba(61,40,23,0.6),rgba(107,66,38,0.3))">
+          <div class="cookie-visual">
             <div class="cookie-disc"><div class="chip c1"></div><div class="chip c2"></div><div class="chip c3"></div><div class="chip c4"></div><div class="chip c5"></div></div>
           </div>
           <div class="featured-badge">#1 Bestseller</div>
@@ -102,10 +118,11 @@
       </div>
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,#5c3a1e 0%,#8b6543 50%,#c4a35a 100%)">
+        <div class="featured-img" style="background:linear-gradient(135deg,rgba(92,58,30,0.6),rgba(196,163,90,0.2))">
           <div class="cookie-visual">
             <div class="cookie-disc salted-caramel"><div class="drizzle"></div></div>
           </div>
+          <div class="featured-badge">Limited</div>
         </div>
         <div class="featured-info">
           <span class="featured-tag">Limited</span>
@@ -119,10 +136,11 @@
       </div>
 
       <div class="featured-card">
-        <div class="featured-img" style="background:linear-gradient(135deg,#7b3f00 0%,#b8860b 50%,#daa520 100%)">
+        <div class="featured-img" style="background:linear-gradient(135deg,rgba(123,63,0,0.6),rgba(218,165,32,0.2))">
           <div class="cookie-visual">
-            <div class="cookie-disc golden><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div>
+            <div class="cookie-disc golden"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div><div class="sprinkle s5"></div><div class="sprinkle s6"></div></div>
           </div>
+          <div class="featured-badge">New</div>
         </div>
         <div class="featured-info">
           <span class="featured-tag">New</span>
@@ -139,12 +157,13 @@
   </div>
 </section>
 
-<!-- Why Us Section -->
+<!-- Why Us -->
 <section class="section why-section">
   <div class="container">
     <div class="section-header">
       <span class="section-eyebrow">Why Crumb & Co.</span>
       <h2 class="section-title">Baked Different</h2>
+      <p class="section-desc">Every cookie is a promise — of quality, of care, of flavour without compromise.</p>
     </div>
     <div class="why-grid">
       <div class="why-card">
@@ -171,10 +190,10 @@
   </div>
 </section>
 
-<!-- Testimonial Section -->
+<!-- Testimonial -->
 <section class="section testimonial-section">
   <div class="container">
-    <div class="testimonial-wrapper">
+    <div class="testimonial-wrapper reveal">
       <div class="quote-mark"><i class="fas fa-quote-left"></i></div>
       <blockquote class="testimonial-quote">
         These are the best cookies I've ever had. The triple chocolate chunk is dangerous — I ordered three boxes in one week. The salt on the caramel cookie is perfection.
@@ -193,16 +212,14 @@
   </div>
 </section>
 
-<!-- CTA Section -->
+<!-- CTA -->
 <section class="section cta-section">
   <div class="container">
-    <div class="cta-box">
+    <div class="cta-box reveal">
       <div class="cta-content">
         <h2>Ready to Taste<br>the Difference?</h2>
         <p>Order a box today and experience cookies the way they should be — buttery, gooey, and impossibly good.</p>
-        <a href="order.html" class="btn btn-primary btn-lg">
-          Place Your Order <i class="fas fa-arrow-right"></i>
-        </a>
+        <a href="order.html" class="btn btn-primary btn-lg"><span>Place Your Order</span> <i class="fas fa-arrow-right"></i></a>
       </div>
       <div class="cta-visual">
         <div class="cookie-stack">
