@@ -768,6 +768,56 @@ body {
   color:var(--coffee); margin-bottom:0.5rem; letter-spacing:-0.01em;
 }
 
+/* --- Viral Tins Section --- */
+.viral-section { background:var(--bg); }
+.viral-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1.5rem;
+}
+.viral-card {
+  background:var(--bg-card); border-radius:var(--radius);
+  overflow:hidden; transition:var(--transition-slow);
+  border:1px solid var(--border); box-shadow:var(--shadow-xs);
+  opacity:0; transform:translateY(40px);
+}
+.viral-card.in-view { opacity:1; transform:translateY(0); }
+.viral-card:nth-child(1){transition-delay:0s}
+.viral-card:nth-child(2){transition-delay:.1s}
+.viral-card:nth-child(3){transition-delay:.2s}
+.viral-card:nth-child(4){transition-delay:.3s}
+.viral-card:hover {
+  transform:translateY(-8px);
+  box-shadow:var(--shadow-lg); border-color:var(--caramel-light);
+}
+.viral-img {
+  background-size:cover; background-position:center;
+  position:relative; height:280px; overflow:hidden;
+}
+.viral-img::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(61,40,23,0.08));
+  z-index:1;
+}
+.viral-badge {
+  position:absolute; top:1rem; right:1rem; z-index:2;
+  background:var(--coffee); color:var(--bg);
+  padding:0.3rem 0.9rem; border-radius:50px;
+  font-size:0.62rem; font-weight:700;
+  letter-spacing:0.08em; text-transform:uppercase;
+  box-shadow:var(--shadow-sm);
+}
+.viral-info { padding:1.8rem; }
+.viral-tag {
+  font-size:0.62rem; text-transform:uppercase;
+  letter-spacing:0.18em; color:var(--caramel-dark); font-weight:600;
+}
+.viral-info h3 {
+  font-family:var(--serif); font-size:1.4rem; font-weight:500;
+  color:var(--coffee); margin:0.4rem 0 0.6rem; letter-spacing:-0.01em;
+}
+.viral-info p { font-size:0.88rem; color:var(--ink-soft); margin-bottom:1.5rem; line-height:1.6; }
+.viral-footer { display:flex; justify-content:space-between; align-items:center; }
+
 /* --- Reveal --- */
 .reveal {
   opacity:0; transform:translateY(30px);
