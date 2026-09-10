@@ -54,7 +54,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
 
 // Observe all elements with reveal classes
-document.querySelectorAll('.reveal, .fade-in, .featured-card, .why-card, .menu-item, .value-card, .about-stat, .gallery-item, .section-header').forEach(el => {
+document.querySelectorAll('.reveal, .fade-in, .featured-card, .why-card, .menu-item, .value-card, .about-stat, .gallery-item, .section-header, .viral-card').forEach(el => {
   revealObserver.observe(el);
 });
 
