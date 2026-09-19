@@ -185,9 +185,11 @@ body {
 @keyframes barFill { 0%{width:0%} 100%{width:100%} }
 
 /* --- BAKELY Logo (image, no circle) --- */
-.bakely-logo-img { height:60px; width:auto; display:block; transition:var(--transition); }
+.bakely-logo-img { height:110px; width:auto; display:block; transition:var(--transition); mix-blend-mode:lighten; }
 .nav-brand:hover .bakely-logo-img { transform:scale(1.05); filter:brightness(1.1); }
-.footer-brand-col .bakely-logo-img { height:90px; margin-bottom:0.8rem; }
+.footer-brand-col .bakely-logo-img { height:130px; margin-bottom:0.8rem; }
+.navbar { min-height:96px; }
+.navbar .nav-container { align-items:center; }
 
 /* --- BAKELY Wordmark Logo (no circle, big) --- */
 .bakely-wordmark {
