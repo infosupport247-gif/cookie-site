@@ -184,6 +184,76 @@ body {
 .preloader-bar-fill { height:100%; width:0%; background:var(--gold); animation:barFill 2s ease-in-out forwards; }
 @keyframes barFill { 0%{width:0%} 100%{width:100%} }
 
+/* --- BAKELY Logo (real image) --- */
+.bakely-logo-img {
+  height:58px; width:58px; object-fit:cover;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  box-shadow:var(--shadow-sm),0 0 12px rgba(201,165,92,0.15);
+  transition:var(--transition);
+  display:block;
+}
+.nav-brand:hover .bakely-logo-img {
+  transform:scale(1.06);
+  box-shadow:var(--shadow-gold),0 0 20px rgba(201,165,92,0.25);
+}
+.footer-brand-col .bakely-logo-img { height:80px; width:80px; margin-bottom:1rem; }
+
+/* --- BAKELY Logo --- */
+.bakely-logo {
+  display:inline-flex; align-items:center; gap:0.6rem;
+}
+.bakely-circle {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  width:54px; height:54px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(201,165,92,0.9),rgba(224,200,150,0.7));
+  border:2px solid var(--gold);
+  box-shadow:var(--shadow-sm),0 0 12px rgba(201,165,92,0.15);
+  transition:var(--transition);
+  position:relative; overflow:hidden;
+}
+.nav-brand:hover .bakely-circle {
+  transform:scale(1.05);
+  box-shadow:var(--shadow-gold),0 0 20px rgba(201,165,92,0.2);
+}
+.bakely-circle::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.15),transparent 60%);
+  border-radius:50%;
+}
+.bakely-name {
+  font-family:'Playfair Display',serif; font-weight:900;
+  font-size:0.6rem; color:var(--bg);
+  letter-spacing:0.05em; line-height:1;
+  background:linear-gradient(135deg,#fffbe0,#c9a55c);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  position:relative; z-index:1;
+}
+.bakely-sub {
+  font-family:'Montserrat',sans-serif; font-weight:400;
+  font-size:0.28rem; color:var(--gold-bright);
+  letter-spacing:0.1em; text-transform:uppercase;
+  margin-top:1px; opacity:0.7;
+  position:relative; z-index:1;
+}
+.bakely-tagline {
+  font-family:'Great Vibes',cursive !important;
+  font-size:1.4rem !important; color:var(--gold) !important;
+  margin-bottom:0.3rem !important; line-height:1.2 !important;
+}
+
+/* --- BAKELY Logo (footer version) --- */
+.footer-brand-col .bakely-logo .bakely-circle {
+  width:64px; height:64px;
+}
+.footer-brand-col .bakely-logo .bakely-name {
+  font-size:0.7rem;
+}
+.footer-brand-col .bakely-logo .bakely-sub {
+  font-size:0.32rem;
+}
+
 /* --- Navigation --- */
 .navbar {
   position:fixed; top:0; left:0; right:0;
