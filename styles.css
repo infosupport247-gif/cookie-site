@@ -186,11 +186,11 @@ body {
 .preloader-bar-fill { height:100%; width:0%; background:var(--gold); animation:barFill 2s ease-in-out forwards; }
 @keyframes barFill { 0%{width:0%} 100%{width:100%} }
 
-/* --- BAKELY Logo (image, no circle) --- */
-.bakely-logo-img { height:90px; width:auto; display:block; border-radius:0; border:none; transition:var(--transition); mix-blend-mode:lighten; }
+/* --- BAKELY Logo (image, color-matched background, no circle) --- */
+.bakely-logo-img { height:130px; width:auto; display:block; border-radius:0; border:none; transition:var(--transition); }
 .nav-brand:hover .bakely-logo-img { transform:scale(1.05); filter:brightness(1.1); }
-.footer-brand-col .bakely-logo-img { height:110px; margin-bottom:0.8rem; }
-.navbar { min-height:110px; }
+.footer-brand-col .bakely-logo-img { height:150px; }
+.navbar { min-height:150px; }
 .navbar .nav-container { align-items:center; }
 
 /* --- BAKELY Brand Mark (two-leaf emblem + wordmark) --- */
