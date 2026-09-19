@@ -184,6 +184,36 @@ body {
 .preloader-bar-fill { height:100%; width:0%; background:var(--gold); animation:barFill 2s ease-in-out forwards; }
 @keyframes barFill { 0%{width:0%} 100%{width:100%} }
 
+/* --- BAKELY Wordmark Logo (no circle, big) --- */
+.bakely-wordmark {
+  display:flex; flex-direction:column; align-items:center;
+  line-height:1;
+}
+.bakely-wordmark .wm-name {
+  font-family:'Playfair Display',serif; font-weight:900;
+  font-size:2rem; letter-spacing:0.04em;
+  background:linear-gradient(180deg,#fdf3d0 0%,#e8c976 35%,#c9a55c 60%,#8a6e2f 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:1px 1px 0 rgba(0,0,0,0.15);
+  transition:var(--transition);
+}
+.bakely-wordmark .wm-line {
+  width:70%; height:1px; margin:0.35rem 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.bakely-wordmark .wm-sub {
+  font-family:'Montserrat',sans-serif; font-weight:500;
+  font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--gold);
+}
+.nav-brand:hover .bakely-wordmark .wm-name {
+  filter:brightness(1.15);
+}
+.footer-brand-col .bakely-wordmark { align-items:flex-start; margin-bottom:0.8rem; }
+.footer-brand-col .bakely-wordmark .wm-name { font-size:2.4rem; }
+.footer-brand-col .bakely-wordmark .wm-line { width:100%; margin-left:0; }
+
 /* --- BAKELY Logo (real image) --- */
 .bakely-logo-img {
   height:58px; width:58px; object-fit:cover;
@@ -275,6 +305,7 @@ body {
   color:var(--cream); text-decoration:none;
   letter-spacing:0.15em; text-transform:uppercase;
   transition:var(--transition);
+  display:flex; align-items:center;
 }
 .nav-brand:hover { color:var(--gold-light); letter-spacing:0.18em; }
 .nav-menu { display:flex; gap:2.5rem; list-style:none; align-items:center; }
