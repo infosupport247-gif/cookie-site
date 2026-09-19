@@ -381,15 +381,9 @@ body {
   background:radial-gradient(ellipse at 50% 40%,var(--espresso-light) 0%,var(--bg) 70%);
   overflow:hidden;
 }
-.hero-image { background-size:cover; background-position:center; position:relative; }
-
-.hero-logo {
-  width:min(420px,70vw); height:auto; display:block;
-  margin:0 auto 1.5rem;
-  mix-blend-mode:lighten;
-  filter:drop-shadow(0 10px 40px rgba(0,0,0,0.4));
-  opacity:0; transform:translateY(20px) scale(0.96);
-  animation:heroFade 1s ease .1s forwards;
+.hero-image {
+  background-size:cover; background-position:center;
+  position:relative;
 }
 .hero-overlay {
   position:absolute; inset:0;
