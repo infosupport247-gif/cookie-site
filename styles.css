@@ -185,7 +185,7 @@ body {
 @keyframes barFill { 0%{width:0%} 100%{width:100%} }
 
 /* --- BAKELY Logo (image, no circle) --- */
-.bakely-logo-img { height:64px; width:auto; display:block; transition:var(--transition); mix-blend-mode:lighten; }
+.bakely-logo-img { height:64px; width:auto; display:block; border-radius:0; border:none; transition:var(--transition); mix-blend-mode:lighten; }
 .nav-brand:hover .bakely-logo-img { transform:scale(1.05); filter:brightness(1.1); }
 .footer-brand-col .bakely-logo-img { height:84px; margin-bottom:0.8rem; }
 .navbar { min-height:auto; }
@@ -220,21 +220,6 @@ body {
 .footer-brand-col .bakely-wordmark { align-items:flex-start; margin-bottom:0.8rem; }
 .footer-brand-col .bakely-wordmark .wm-name { font-size:2.4rem; }
 .footer-brand-col .bakely-wordmark .wm-line { width:100%; margin-left:0; }
-
-/* --- BAKELY Logo (real image) --- */
-.bakely-logo-img {
-  height:58px; width:58px; object-fit:cover;
-  border-radius:50%;
-  border:2px solid var(--gold);
-  box-shadow:var(--shadow-sm),0 0 12px rgba(201,165,92,0.15);
-  transition:var(--transition);
-  display:block;
-}
-.nav-brand:hover .bakely-logo-img {
-  transform:scale(1.06);
-  box-shadow:var(--shadow-gold),0 0 20px rgba(201,165,92,0.25);
-}
-.footer-brand-col .bakely-logo-img { height:80px; width:80px; margin-bottom:1rem; }
 
 /* --- BAKELY Logo --- */
 .bakely-logo {
