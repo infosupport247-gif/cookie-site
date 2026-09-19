@@ -7,22 +7,24 @@
 html { scroll-behavior:smooth; font-size:16px; }
 body {
   font-family:'DM Sans',system-ui,sans-serif;
-  background:#15100a;
+  background:#1c1108;
   color:#e8dcc8;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 :root {
-  --bg:#15100a;
-  --bg-warm:#1c150d;
+  --bg:#1c1108;
+  --bg-warm:#241708;
   --bg-card:rgba(255,255,255,0.03);
-  --bg-card-solid:#1c150d;
-  --espresso:#2a1c10;
-  --espresso-light:#3d2817;
+  --bg-card-solid:#241708;
+  --espresso:#2e1c0c;
+  --espresso-light:#40270f;
   --gold:#c9a55c;
   --gold-light:#e0c896;
   --gold-bright:#f0d99a;
+  --gold-champagne:#f6e7c1;
+  --gold-antique:#8a6e2f;
   --gold-soft:rgba(201,165,92,0.08);
   --gold-glow:rgba(201,165,92,0.15);
   --cream:#f5ecd9;
@@ -190,6 +192,37 @@ body {
 .footer-brand-col .bakely-logo-img { height:84px; margin-bottom:0.8rem; }
 .navbar { min-height:auto; }
 .navbar .nav-container { align-items:center; }
+
+/* --- BAKELY Brand Mark (two-leaf emblem + wordmark) --- */
+.brand-mark {
+  display:flex; flex-direction:column; align-items:center;
+  line-height:1; transition:var(--transition);
+}
+.brand-emblem { width:34px; height:auto; margin-bottom:0.15rem; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35)); transition:var(--transition); }
+.nav-brand:hover .brand-emblem { transform:translateY(-2px) scale(1.05); }
+.brand-wordmark {
+  font-family:'Playfair Display',serif; font-weight:900;
+  font-size:1.5rem; letter-spacing:0.03em;
+  background:linear-gradient(180deg,var(--gold-champagne) 0%,var(--gold-bright) 30%,var(--gold) 60%,var(--gold-antique) 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 1px 0 rgba(0,0,0,0.2);
+}
+.brand-line { width:60%; height:1px; margin:0.32rem 0; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.brand-tagline {
+  font-family:'Montserrat',sans-serif; font-weight:500;
+  font-size:0.42rem; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--gold-light); white-space:nowrap;
+  display:flex; align-items:center; gap:0.35em;
+}
+.brand-tagline .dot { width:2.5px; height:2.5px; border-radius:50%; background:var(--gold); display:inline-block; }
+
+/* Footer — bigger vertical brand mark */
+.footer-brand-col .brand-mark { align-items:flex-start; margin-bottom:1rem; }
+.footer-brand-col .brand-emblem { width:46px; margin-bottom:0.3rem; }
+.footer-brand-col .brand-wordmark { font-size:2.1rem; }
+.footer-brand-col .brand-line { width:80%; margin-left:0; }
+.footer-brand-col .brand-tagline { font-size:0.5rem; }
 
 /* --- BAKELY Wordmark Logo (no circle, big) --- */
 .bakely-wordmark {
