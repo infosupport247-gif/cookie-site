@@ -102,6 +102,7 @@
       #checkout-modal { background:var(--bg-warm,#241708); border:1px solid var(--border-bright,rgba(201,165,92,0.2));
         border-radius:20px; padding:2.2rem 2rem 2rem; max-width:420px; width:100%; max-height:88vh; overflow-y:auto; font-family:sans-serif; }
       #checkout-modal h3 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:1.5rem; margin-bottom:1.4rem; font-weight:500; }
+      .checkout-logo { display:block; height:48px; width:auto; margin:0 0 1rem; mix-blend-mode:lighten; }
       #checkout-modal label.field-label { display:block; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.15em;
         color:var(--gold,#c9a55c); margin-bottom:0.5rem; margin-top:1.3rem; font-weight:600; }
       #checkout-modal label.field-label:first-of-type { margin-top:0; }
@@ -251,6 +252,7 @@
       <div id="checkout-modal">
         <button class="checkout-close" id="checkout-close-btn">&times;</button>
         <div id="checkout-form-wrap">
+          <img src="images/bakely-logo.png" alt="BAKELY" class="checkout-logo">
           <h3>Checkout</h3>
           <label class="field-label">Full Name</label>
           <input type="text" id="checkout-name" placeholder="Your name" required>
