@@ -334,9 +334,13 @@
   });
 
   // boot
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', showGate);
-  } else {
+  function boot() {
+    injectStyles();
     showGate();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();
