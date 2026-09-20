@@ -191,7 +191,8 @@ body {
 .nav-brand:hover .bakely-logo-img { transform:scale(1.05); filter:brightness(1.1); }
 .footer-brand-col .bakely-logo-img { height:150px; }
 .navbar { min-height:300px; }
-.navbar .nav-container { align-items:center; }
+.navbar .nav-container { align-items:center; position:relative; justify-content:flex-end; }
+.navbar .nav-brand { position:absolute; top:10px; left:20px; z-index:10; }
 
 /* --- BAKELY Brand Mark (two-leaf emblem + wordmark) --- */
 .brand-mark {
@@ -1170,6 +1171,8 @@ body {
   }
   .nav-menu.open { right:0; }
   .nav-toggle { display:flex; }
+  .navbar .nav-brand { position:static; top:auto; left:auto; }
+  .navbar .nav-container { justify-content:space-between; }
   .hero-stats { gap:1.5rem; }
   .stat-divider { display:none; }
   .footer-grid { grid-template-columns:1fr; }
