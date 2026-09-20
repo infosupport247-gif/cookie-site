@@ -7,19 +7,19 @@
 html { scroll-behavior:smooth; font-size:16px; }
 body {
   font-family:'DM Sans',system-ui,sans-serif;
-  background:#1c1108;
-  color:#e8dcc8;
+  background:#2b0a12;
+  color:#f0dcc8;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 :root {
-  --bg:#1c1108;
-  --bg-warm:#241708;
+  --bg:#2b0a12;
+  --bg-warm:#38101a;
   --bg-card:rgba(255,255,255,0.03);
-  --bg-card-solid:#241708;
-  --espresso:#2e1c0c;
-  --espresso-light:#40270f;
+  --bg-card-solid:#38101a;
+  --espresso:#451625;
+  --espresso-light:#5c1f31;
   --gold:#c9a55c;
   --gold-light:#e0c896;
   --gold-bright:#f0d99a;
@@ -30,15 +30,15 @@ body {
   --cream:#f5ecd9;
   --cream-soft:rgba(245,236,217,0.7);
   --cream-dim:rgba(245,236,217,0.4);
-  --ink:#e8dcc8;
-  --ink-soft:rgba(232,220,200,0.55);
-  --ink-light:rgba(232,220,200,0.3);
-  --border:rgba(201,165,92,0.1);
-  --border-bright:rgba(201,165,92,0.2);
-  --shadow-sm:0 4px 20px rgba(0,0,0,0.3);
-  --shadow-md:0 10px 40px rgba(0,0,0,0.4);
-  --shadow-lg:0 24px 80px rgba(0,0,0,0.5);
-  --shadow-gold:0 8px 40px rgba(201,165,92,0.1);
+  --ink:#f0dcc8;
+  --ink-soft:rgba(240,220,200,0.55);
+  --ink-light:rgba(240,220,200,0.3);
+  --border:rgba(201,165,92,0.12);
+  --border-bright:rgba(201,165,92,0.22);
+  --shadow-sm:0 4px 20px rgba(0,0,0,0.35);
+  --shadow-md:0 10px 40px rgba(0,0,0,0.45);
+  --shadow-lg:0 24px 80px rgba(0,0,0,0.55);
+  --shadow-gold:0 8px 40px rgba(201,165,92,0.12);
   --serif:'Cormorant Garamond',serif;
   --sans:'DM Sans',sans-serif;
   --radius:16px;
