@@ -769,6 +769,11 @@ body {
 
 /* --- Testimonial --- */
 .testimonial-section { background:var(--bg); padding:7rem 0; }
+.testimonial-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; max-width:1200px; margin:0 auto; }
+.testimonial-grid .testimonial-wrapper { max-width:none; padding:2.5rem; text-align:left; }
+.testimonial-grid .testimonial-author { justify-content:flex-start; }
+.testimonial-grid .testimonial-quote { font-size:1.05rem; margin-bottom:1.8rem; }
+.testimonial-grid .testimonial-rating { text-align:left; }
 .testimonial-wrapper {
   max-width:800px; margin:0 auto; text-align:center;
   position:relative; padding:3.5rem;
@@ -1139,6 +1144,56 @@ body {
 .reveal.in-view { opacity:1; transform:translateY(0); }
 .reveal-delay-1{transition-delay:.1s} .reveal-delay-2{transition-delay:.2s}
 .reveal-delay-3{transition-delay:.3s} .reveal-delay-4{transition-delay:.4s}
+
+/* --- Product Categories --- */
+.categories-section { background:var(--bg-warm); }
+.category-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+.category-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);
+  padding:2.5rem 2rem; text-align:center; transition:var(--transition);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+}
+.category-card:hover { border-color:var(--border-bright); box-shadow:var(--shadow-gold); transform:translateY(-6px); }
+.category-icon {
+  width:60px; height:60px; margin:0 auto 1.3rem; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem; color:var(--bg);
+}
+.category-card h3 { font-family:var(--serif); font-size:1.35rem; font-weight:500; color:var(--cream); margin-bottom:0.7rem; }
+.category-card p { font-size:0.9rem; color:var(--ink-soft); line-height:1.7; }
+
+/* --- Delivery Options --- */
+.delivery-section { background:var(--bg); }
+.delivery-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; }
+.delivery-card {
+  text-align:center; padding:2.5rem 1.8rem; border-radius:var(--radius-lg);
+  border:1px solid var(--border); background:var(--bg-card); transition:var(--transition);
+}
+.delivery-card:hover { border-color:var(--border-bright); box-shadow:var(--shadow-gold); transform:translateY(-4px); }
+.delivery-card i { font-size:1.8rem; color:var(--gold); margin-bottom:1rem; display:block; }
+.delivery-card h3 { font-family:var(--serif); font-size:1.2rem; color:var(--cream); margin-bottom:0.6rem; font-weight:500; }
+.delivery-card p { font-size:0.85rem; color:var(--ink-soft); line-height:1.6; }
+
+/* --- FAQ Accordion --- */
+.faq-section { background:var(--bg-warm); }
+.faq-list { max-width:800px; margin:0 auto; }
+.faq-item { border-bottom:1px solid var(--border); }
+.faq-question {
+  width:100%; background:none; border:none; text-align:left; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.5rem 0.5rem; font-family:var(--sans); font-size:1rem; font-weight:500;
+  color:var(--cream); transition:var(--transition);
+}
+.faq-question:hover { color:var(--gold-light); }
+.faq-question i { color:var(--gold); font-size:0.85rem; transition:transform .3s ease; flex-shrink:0; margin-left:1rem; }
+.faq-item.open .faq-question i { transform:rotate(45deg); }
+.faq-answer {
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .35s ease;
+  padding:0 0.5rem;
+}
+.faq-item.open .faq-answer { max-height:220px; padding:0 0.5rem 1.5rem; }
+.faq-answer p { color:var(--ink-soft); font-size:0.92rem; line-height:1.7; }
 
 /* --- Responsive --- */
 @media (max-width:900px) {
