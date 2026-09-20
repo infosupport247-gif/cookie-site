@@ -29,6 +29,19 @@
   let editModeOn = false;
   let moveModeOn = false;
   let dirty = false;
+  let colorPanelOpen = false;
+  const colorChanges = {}; // { '--gold': '#c9a55c', ... } only entries the admin actually changed
+
+  const EDITABLE_COLOR_VARS = [
+    { key: '--bg', label: 'Page Background' },
+    { key: '--espresso', label: 'Card/Panel Background' },
+    { key: '--gold', label: 'Primary Gold Accent' },
+    { key: '--gold-light', label: 'Gold Light (hover/glow)' },
+    { key: '--gold-bright', label: 'Gold Bright (highlights)' },
+    { key: '--cream', label: 'Cream Text' },
+    { key: '--ink', label: 'Body Text Color' },
+    { key: '--border', label: 'Border / Divider' }
+  ];
   let saving = false;
 
   async function sha256(str) {
@@ -86,7 +99,29 @@
         width:22px; height:22px; font-size:0.7rem; cursor:pointer; display:none;
         align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.4); }
       .admin-movable[style*="translate"]:hover .admin-reset-btn { display:flex; }
+
+      #admin-color-panel { position:fixed; top:0; right:0; bottom:0; width:280px;
+        background:#1c1108; border-left:1px solid #c9a55c; z-index:99997;
+        box-shadow:-10px 0 40px rgba(0,0,0,0.5); font-family:sans-serif;
+        overflow-y:auto; padding:1.2rem; transform:translateX(100%); transition:transform .3s ease; }
+      #admin-color-panel.open { transform:translateX(0); }
+      #admin-color-panel h3 { color:#f0d99a; font-size:0.95rem; margin-bottom:1rem; letter-spacing:0.03em; }
+      #admin-color-panel .swatch-row { display:flex; align-items:center; justify-content:space-between;
+        margin-bottom:0.9rem; gap:0.6rem; }
+      #admin-color-panel .swatch-row label { color:#e8dcc8; font-size:0.72rem; flex:1; }
+      #admin-color-panel .swatch-row input[type=color] { width:38px; height:28px; border:1px solid #3d2817;
+        border-radius:6px; background:none; cursor:pointer; padding:0; }
+      #admin-color-panel .swatch-row input[type=text] { width:78px; font-size:0.68rem; padding:0.3rem 0.4rem;
+        border-radius:6px; border:1px solid #3d2817; background:#241708; color:#f5ecd9; }
+      #admin-color-panel .panel-actions { display:flex; gap:0.5rem; margin-top:1.2rem; }
+      #admin-color-panel .panel-actions button { flex:1; border:none; border-radius:8px; padding:0.6rem;
+        font-size:0.75rem; font-weight:600; cursor:pointer; }
+      #admin-color-panel .btn-reset-colors { background:#3d2817; color:#e8dcc8; }
+      #admin-color-panel .btn-close-colors { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
+      #admin-toolbar .btn-colors { background:#3d2817; color:#e8dcc8; }
+      #admin-toolbar .btn-colors.active { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
     `;
+
     const style = document.createElement('style');
     style.id = 'admin-edit-styles';
     style.textContent = css;
@@ -305,6 +340,7 @@
     bar.innerHTML = `
       <span class="status" id="admin-status">No changes</span>
       <button class="btn-move" id="admin-move-btn">✥ Move: OFF</button>
+      <button class="btn-colors" id="admin-colors-btn">🎨 Colors</button>
       <button class="btn-save" id="admin-save-btn">💾 Save &amp; Publish</button>
       <button class="btn-discard" id="admin-discard-btn">Discard</button>
       <button class="btn-logout" id="admin-logout-btn">Exit</button>
@@ -327,12 +363,94 @@
       e.target.classList.toggle('active', moveModeOn);
       toast(moveModeOn ? 'Move Mode ON — drag any highlighted block to reposition it.' : 'Move Mode OFF — text/image editing active.', 3000);
     });
+    document.getElementById('admin-colors-btn').addEventListener('click', e => {
+      toggleColorPanel();
+      e.target.classList.toggle('active');
+    });
   }
 
   function updateToolbar() {
     const s = document.getElementById('admin-status');
     if (s) s.textContent = dirty ? 'Unsaved changes' : 'No changes';
   }
+
+  // --- Color Panel ---
+  function rgbaToHex(str) {
+    // supports 'rgba(r,g,b,a)' or plain hex; returns {hex, alpha}
+    const m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\)/.exec(str);
+    if (!m) return { hex: str.trim(), alpha: 1 };
+    const [, r, g, b, a] = m;
+    const hex = '#' + [r, g, b].map(n => parseInt(n).toString(16).padStart(2, '0')).join('');
+    return { hex, alpha: a !== undefined ? parseFloat(a) : 1 };
+  }
+
+  function getRootVarValue(key) {
+    return getComputedStyle(document.documentElement).getPropertyValue(key).trim();
+  }
+
+  function applyColorVar(key, hexValue) {
+    document.documentElement.style.setProperty(key, hexValue);
+    colorChanges[key] = hexValue;
+    markDirty();
+  }
+
+  function buildColorPanel() {
+    if (document.getElementById('admin-color-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'admin-color-panel';
+    let rowsHtml = '<h3>🎨 Website Colors</h3>';
+    EDITABLE_COLOR_VARS.forEach(v => {
+      const raw = getRootVarValue(v.key) || '#000000';
+      const { hex } = rgbaToHex(raw);
+      rowsHtml += `
+        <div class="swatch-row" data-var="${v.key}">
+          <label>${v.label}</label>
+          <input type="color" value="${hex}" data-var-input="${v.key}">
+          <input type="text" value="${hex}" data-var-text="${v.key}">
+        </div>`;
+    });
+    rowsHtml += `
+      <div class="panel-actions">
+        <button class="btn-reset-colors" id="admin-reset-colors">Reset All</button>
+        <button class="btn-close-colors" id="admin-close-colors">Done</button>
+      </div>`;
+    panel.innerHTML = rowsHtml;
+    document.body.appendChild(panel);
+
+    panel.querySelectorAll('input[type=color]').forEach(input => {
+      input.addEventListener('input', () => {
+        const key = input.dataset.varInput;
+        applyColorVar(key, input.value);
+        const textInput = panel.querySelector(`input[type=text][data-var-text="${key}"]`);
+        if (textInput) textInput.value = input.value;
+      });
+    });
+    panel.querySelectorAll('input[type=text]').forEach(input => {
+      input.addEventListener('change', () => {
+        const key = input.dataset.varText;
+        let val = input.value.trim();
+        if (!/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(val)) { toast('Enter a valid hex color like #c9a55c'); return; }
+        applyColorVar(key, val);
+        const colorInput = panel.querySelector(`input[type=color][data-var-input="${key}"]`);
+        if (colorInput) colorInput.value = val;
+      });
+    });
+    document.getElementById('admin-reset-colors').addEventListener('click', () => {
+      if (!confirm('Reset all colors to the last published values?')) return;
+      Object.keys(colorChanges).forEach(k => delete colorChanges[k]);
+      panel.remove();
+      location.reload();
+    });
+    document.getElementById('admin-close-colors').addEventListener('click', toggleColorPanel);
+  }
+
+  function toggleColorPanel() {
+    colorPanelOpen = !colorPanelOpen;
+    buildColorPanel();
+    const panel = document.getElementById('admin-color-panel');
+    if (panel) panel.classList.toggle('open', colorPanelOpen);
+  }
+
 
   function getToken() {
     let token = sessionStorage.getItem('bakely_admin_token');
@@ -410,9 +528,42 @@
     clone.classList.remove('admin-move-mode');
     const gate = clone.querySelector('#admin-gate'); if (gate) gate.remove();
     const bar = clone.querySelector('#admin-toolbar'); if (bar) bar.remove();
+    const colorPanel = clone.querySelector('#admin-color-panel'); if (colorPanel) colorPanel.remove();
     const toastEl = clone.querySelector('#admin-toast'); if (toastEl) toastEl.remove();
     const styleEl = clone.querySelector('#admin-edit-styles'); if (styleEl) styleEl.remove();
+    // strip any inline CSS var overrides used for live color preview — the real
+    // values live in styles.css, published separately by publishColorChanges()
+    if (clone.hasAttribute('style')) {
+      const s = clone.getAttribute('style') || '';
+      if (/--[a-z-]+\s*:/.test(s)) clone.removeAttribute('style');
+    }
     return '<!DOCTYPE html>\n' + clone.outerHTML;
+  }
+
+  async function publishColorChanges() {
+    const keys = Object.keys(colorChanges);
+    if (keys.length === 0) return;
+    toast('Updating site colors...', 5000);
+    const current = await ghRequest(`styles.css?ref=${REPO_BRANCH}`, { method: 'GET' });
+    let css = decodeURIComponent(escape(atob(current.content.replace(/\n/g, ''))));
+    keys.forEach(key => {
+      const value = colorChanges[key];
+      const re = new RegExp(`(${key.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*:\\s*)[^;]+;`);
+      if (re.test(css)) {
+        css = css.replace(re, `$1${value};`);
+      } else {
+        css = css.replace(/:root\s*{/, `:root {\n  ${key}: ${value};`);
+      }
+    });
+    await ghRequest('styles.css', {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: 'Admin edit: update site colors via live editor',
+        content: b64EncodeUnicode(css),
+        sha: current.sha,
+        branch: REPO_BRANCH
+      })
+    });
   }
 
   async function publish() {
@@ -422,6 +573,7 @@
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Publishing...'; }
     try {
       await uploadPendingImages();
+      await publishColorChanges();
       const html = getCleanHTML();
       const current = await ghRequest(`${PAGE_PATH}?ref=${REPO_BRANCH}`, { method: 'GET' });
       await ghRequest(PAGE_PATH, {
@@ -433,6 +585,7 @@
           branch: REPO_BRANCH
         })
       });
+      Object.keys(colorChanges).forEach(k => delete colorChanges[k]);
       dirty = false;
       updateToolbar();
       toast('✅ Published! Live site updates in ~20-30s.', 6000);
