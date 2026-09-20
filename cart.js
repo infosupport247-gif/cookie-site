@@ -112,30 +112,53 @@
       #checkout-modal input:focus, #checkout-modal textarea:focus { border-color:var(--gold,#c9a55c); }
       #checkout-modal input::placeholder, #checkout-modal textarea::placeholder { color:var(--ink-light,rgba(232,220,200,0.3)); }
       .payment-options { display:flex; flex-direction:column; gap:0.7rem; margin-top:0.5rem; }
-      .payment-option {
-        display:flex; align-items:center; gap:0.85rem; padding:0.95rem 1.1rem; border-radius:12px;
-        border:1.5px solid var(--border,rgba(201,165,92,0.14)); cursor:pointer; transition:.2s ease;
-        background:rgba(0,0,0,0.15); position:relative;
-      }
-      .payment-option:hover { border-color:var(--border-bright,rgba(201,165,92,0.3)); background:rgba(201,165,92,0.05); }
-      .payment-option.selected { border-color:var(--gold,#c9a55c); background:var(--gold-soft,rgba(201,165,92,0.1)); }
-      .payment-option input[type=radio] {
-        appearance:none; -webkit-appearance:none; margin:0; flex-shrink:0;
-        width:19px; height:19px; border-radius:50%; border:2px solid var(--border-bright,rgba(201,165,92,0.35));
-        background:transparent; cursor:pointer; position:relative; outline:none; box-shadow:none;
-        transition:border-color .2s ease;
-      }
-      .payment-option input[type=radio]:checked { border-color:var(--gold,#c9a55c); }
-      .payment-option input[type=radio]:checked::after {
+
+      /* Quick pay options (Google Pay / PhonePe) */
+      .pay-quick-options { border:1.5px solid var(--gold,#c9a55c); border-radius:14px; overflow:hidden; margin-top:0.6rem; }
+      .pay-quick-option { display:flex; align-items:center; gap:0.8rem; padding:0.9rem 1.1rem; cursor:pointer;
+        border-bottom:1px solid var(--border,rgba(201,165,92,0.1)); position:relative; transition:.2s ease; }
+      .pay-quick-option:last-child { border-bottom:none; }
+      .pay-quick-option:hover { background:rgba(201,165,92,0.05); }
+      .pay-quick-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-quick-icon { width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+      .pay-quick-icon.gpay-icon { color:#4285F4; }
+      .pay-quick-icon.phonepe-icon { color:#5f259f; }
+      .pay-quick-label { flex:1; color:var(--cream,#f5ecd9); font-size:0.92rem; font-weight:500; }
+      .pay-quick-radio { width:19px; height:19px; border-radius:50%; border:2px solid var(--border-bright,rgba(201,165,92,0.35));
+        flex-shrink:0; position:relative; transition:border-color .2s ease; }
+      .pay-quick-option input:checked ~ .pay-quick-radio,
+      .pay-cod-option input:checked ~ .pay-quick-radio { border-color:var(--gold,#c9a55c); }
+      .pay-quick-option input:checked ~ .pay-quick-radio::after,
+      .pay-cod-option input:checked ~ .pay-quick-radio::after {
         content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
         width:10px; height:10px; border-radius:50%; background:var(--gold,#c9a55c);
       }
-      .payment-option .pay-icon {
-        width:34px; height:34px; border-radius:8px; flex-shrink:0;
-        display:flex; align-items:center; justify-content:center; font-size:1rem;
-        background:rgba(201,165,92,0.1); color:var(--gold-light,#e0c896);
-      }
-      .payment-option span.pay-label { color:var(--cream,#f5ecd9); font-size:0.92rem; font-weight:500; flex:1; }
+
+      .pay-section-divider { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; font-weight:600;
+        color:var(--ink-light,rgba(232,220,200,0.35)); margin:1.3rem 0 0.6rem; }
+
+      /* Accordion-style list */
+      .pay-accordion { border:1.5px solid var(--border-bright,rgba(201,165,92,0.2)); border-radius:14px; overflow:hidden; }
+      .pay-acc-item { border-bottom:1px solid var(--border,rgba(201,165,92,0.1)); }
+      .pay-acc-item:last-child { border-bottom:none; }
+      .pay-acc-row { display:flex; align-items:center; gap:0.85rem; padding:0.85rem 1.1rem; cursor:pointer; transition:.2s ease; position:relative; }
+      .pay-acc-row:hover { background:rgba(201,165,92,0.05); }
+      .pay-acc-row input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-acc-row input:checked ~ .pay-acc-icon,
+      .pay-cod-option input:checked ~ .pay-acc-icon { color:var(--gold,#c9a55c); }
+      .pay-acc-row:has(input:checked) { background:var(--gold-soft,rgba(201,165,92,0.08)); }
+      .pay-acc-icon { width:22px; text-align:center; color:var(--ink-soft,rgba(232,220,200,0.55)); font-size:1rem; flex-shrink:0; }
+      .pay-acc-text { flex:1; color:var(--cream,#f5ecd9); font-size:0.9rem; display:flex; flex-direction:column; gap:0.2rem; }
+      .pay-acc-text small { color:#7ecb9a; font-size:0.72rem; font-weight:500; }
+      .pay-acc-row::after { content:'\\f107'; font-family:"Font Awesome 6 Free"; font-weight:900;
+        color:var(--ink-light,rgba(232,220,200,0.3)); font-size:0.8rem; }
+
+      .pay-cod-option { display:flex; align-items:center; gap:0.85rem; padding:0.95rem 1.1rem; margin-top:0.8rem;
+        border:1.5px solid var(--border-bright,rgba(201,165,92,0.2)); border-radius:14px; cursor:pointer; transition:.2s ease; position:relative; }
+      .pay-cod-option:hover { background:rgba(201,165,92,0.05); }
+      .pay-cod-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-cod-option:has(input:checked) { border-color:var(--gold,#c9a55c); background:var(--gold-soft,rgba(201,165,92,0.08)); }
+      .pay-cod-option .pay-acc-text { flex:1; }
       .checkout-submit-btn { width:100%; margin-top:1.5rem; padding:0.95rem; border:none; border-radius:50px;
         background:linear-gradient(135deg,var(--gold,#c9a55c),var(--gold-light,#e0c896)); color:var(--bg,#1c1108);
         font-weight:700; font-size:0.95rem; cursor:pointer; font-family:sans-serif; }
@@ -261,23 +284,76 @@
           <label class="field-label">Delivery Address</label>
           <textarea id="checkout-address" rows="3" placeholder="Full delivery address" required></textarea>
           <label class="field-label">Payment Method</label>
-          <div class="payment-options">
-            <label class="payment-option selected">
-              <input type="radio" name="payMethod" value="UPI" checked>
-              <span class="pay-icon"><i class="fas fa-mobile-alt"></i></span>
-              <span class="pay-label">UPI</span>
+
+          <div class="pay-quick-options">
+            <label class="pay-quick-option selected">
+              <input type="radio" name="payMethod" value="Google Pay" checked>
+              <span class="pay-quick-icon gpay-icon"><i class="fab fa-google-pay"></i></span>
+              <span class="pay-quick-label">Google Pay</span>
+              <span class="pay-quick-radio"></span>
             </label>
-            <label class="payment-option">
-              <input type="radio" name="payMethod" value="Card">
-              <span class="pay-icon"><i class="fas fa-credit-card"></i></span>
-              <span class="pay-label">Credit / Debit Card</span>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="payMethod" value="Cash on Delivery">
-              <span class="pay-icon"><i class="fas fa-money-bill-wave"></i></span>
-              <span class="pay-label">Cash on Delivery</span>
+            <label class="pay-quick-option">
+              <input type="radio" name="payMethod" value="PhonePe">
+              <span class="pay-quick-icon phonepe-icon"><i class="fas fa-wallet"></i></span>
+              <span class="pay-quick-label">PhonePe</span>
+              <span class="pay-quick-radio"></span>
             </label>
           </div>
+
+          <div class="pay-section-divider">Other Payment Options</div>
+
+          <div class="pay-accordion">
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="UPI">
+                <span class="pay-acc-icon"><i class="fas fa-qrcode"></i></span>
+                <span class="pay-acc-text">UPI (Pay via any App)</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Credit/Debit Card">
+                <span class="pay-acc-icon"><i class="fas fa-credit-card"></i></span>
+                <span class="pay-acc-text">Credit / Debit Card<small>Upto ₹350 discount · 3 offers available</small></span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Wallets">
+                <span class="pay-acc-icon"><i class="fas fa-wallet"></i></span>
+                <span class="pay-acc-text">Wallets</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Pay Later">
+                <span class="pay-acc-icon"><i class="fas fa-clock"></i></span>
+                <span class="pay-acc-text">Pay Later</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="EMI">
+                <span class="pay-acc-icon"><i class="fas fa-calendar-alt"></i></span>
+                <span class="pay-acc-text">EMI</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Net Banking">
+                <span class="pay-acc-icon"><i class="fas fa-university"></i></span>
+                <span class="pay-acc-text">Net Banking</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="pay-cod-option">
+            <input type="radio" name="payMethod" value="Cash on Delivery">
+            <span class="pay-acc-icon"><i class="fas fa-money-bill-wave"></i></span>
+            <span class="pay-acc-text">Cash on Delivery (Cash/UPI)</span>
+            <span class="pay-quick-radio"></span>
+          </label>
+
           <button class="checkout-submit-btn" id="checkout-submit-btn">Place Order</button>
         </div>
         <div class="checkout-success" id="checkout-success" style="display:none">
