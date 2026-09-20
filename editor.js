@@ -1,11 +1,18 @@
 /* ===================================================
-   BAKELY Admin Live Editor
+   BAKELY Admin Live Editor v2
    Inert unless ?admin=1 is in the URL.
    Two-layer security:
      1) Password gate (SHA-256 checked client-side)
      2) GitHub Personal Access Token required to publish
         (never stored in this file, entered per-session,
          kept only in sessionStorage — cleared on tab close)
+
+   Capabilities:
+     - Click-to-edit any text
+     - Replace <img> tags (click or drag-drop a file)
+     - Replace CSS background-image divs (click or drag-drop)
+     - Drag-to-reposition any element (Move Mode toggle)
+     - Publishes straight to the GitHub repo (GitHub Pages rebuilds)
    =================================================== */
 (function () {
   'use strict';
@@ -19,8 +26,8 @@
   const REPO_BRANCH = 'main';
   const PAGE_PATH = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
 
-  let unlocked = false;
   let editModeOn = false;
+  let moveModeOn = false;
   let dirty = false;
   let saving = false;
 
@@ -30,6 +37,7 @@
   }
 
   function injectStyles() {
+    if (document.getElementById('admin-edit-styles')) return;
     const css = `
       #admin-gate { position:fixed; inset:0; background:rgba(10,6,2,0.92); z-index:99999;
         display:flex; align-items:center; justify-content:center; font-family:sans-serif; }
@@ -44,24 +52,40 @@
       #admin-gate .err { color:#e08080; font-size:0.8rem; margin-top:0.6rem; min-height:1em; }
       #admin-toolbar { position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
         background:#1c1108; border:1px solid #c9a55c; border-radius:50px; z-index:99998;
-        display:flex; align-items:center; gap:0.6rem; padding:0.6rem 1rem;
-        box-shadow:0 10px 40px rgba(0,0,0,0.5); font-family:sans-serif; }
-      #admin-toolbar button { border:none; border-radius:30px; padding:0.5rem 1.1rem;
-        font-size:0.78rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; }
+        display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem;
+        box-shadow:0 10px 40px rgba(0,0,0,0.5); font-family:sans-serif; flex-wrap:wrap; justify-content:center; max-width:94vw; }
+      #admin-toolbar button { border:none; border-radius:30px; padding:0.5rem 1.05rem;
+        font-size:0.74rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; white-space:nowrap; }
       #admin-toolbar .btn-save { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
+      #admin-toolbar .btn-move { background:#3d2817; color:#e8dcc8; }
+      #admin-toolbar .btn-move.active { background:linear-gradient(135deg,#e08080,#c95c5c); color:#fff; }
       #admin-toolbar .btn-discard { background:#3d2817; color:#e8dcc8; }
-      #admin-toolbar .btn-logout { background:transparent; color:#e8dcc8; border:1px solid #3d2817 !important; }
-      #admin-toolbar .status { color:#e0c896; font-size:0.75rem; padding:0 0.4rem; }
+      #admin-toolbar .btn-logout { background:transparent; color:#e8dcc8; border:1px solid #5a4020 !important; }
+      #admin-toolbar .status { color:#e0c896; font-size:0.72rem; padding:0 0.3rem; }
       .admin-editable { outline:1px dashed rgba(201,165,92,0.35); outline-offset:2px; cursor:text; }
       .admin-editable:hover { outline-color:rgba(201,165,92,0.8); background:rgba(201,165,92,0.06); }
       .admin-editable:focus { outline:2px solid #c9a55c; background:rgba(201,165,92,0.1); }
-      .admin-editable-img { cursor:pointer; position:relative; }
-      .admin-editable-img:hover { outline:2px dashed #c9a55c; outline-offset:-2px; filter:brightness(0.85); }
-      .admin-drag-over { outline:3px solid #e0c896 !important; filter:brightness(1.2); }
+      .admin-img-target { cursor:pointer !important; position:relative; }
+      .admin-img-target:hover { outline:2px dashed #c9a55c; outline-offset:-2px; filter:brightness(0.8); }
+      .admin-img-target:hover::after {
+        content:'📷 Click or drop image to replace'; position:absolute; inset:auto auto 0 0;
+        background:rgba(28,17,8,0.9); color:#f0d99a; font-size:0.7rem; padding:0.3rem 0.6rem;
+        z-index:500; pointer-events:none; font-family:sans-serif; border-top-right-radius:6px;
+      }
+      .admin-drag-over { outline:3px solid #e0c896 !important; filter:brightness(1.3) !important; }
+      .admin-move-mode .admin-movable { cursor:grab !important; }
+      .admin-move-mode .admin-movable:hover { outline:2px dashed #e08080 !important; outline-offset:2px; }
+      .admin-movable.admin-dragging { cursor:grabbing !important; opacity:0.85; z-index:9000 !important; outline:2px solid #e08080 !important; }
+      .admin-move-mode [contenteditable] { cursor:grab !important; }
       #admin-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%);
         background:#1c1108; border:1px solid #c9a55c; color:#f5ecd9; padding:0.8rem 1.4rem;
         border-radius:8px; z-index:100000; font-family:sans-serif; font-size:0.85rem;
         box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:90vw; }
+      .admin-reset-btn { position:absolute; top:-10px; right:-10px; z-index:600;
+        background:#c9a55c; color:#1c1108; border:none; border-radius:50%;
+        width:22px; height:22px; font-size:0.7rem; cursor:pointer; display:none;
+        align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.4); }
+      .admin-movable[style*="translate"]:hover .admin-reset-btn { display:flex; }
     `;
     const style = document.createElement('style');
     style.id = 'admin-edit-styles';
@@ -96,7 +120,6 @@
       const hash = await sha256(pwInput.value);
       if (hash === PW_HASH) {
         gate.remove();
-        unlocked = true;
         enableEditing();
       } else {
         err.textContent = 'Incorrect password.';
@@ -128,40 +151,101 @@
 
   function markDirty() { dirty = true; updateToolbar(); }
 
-  function attachImageHandlers(img) {
-    img.classList.add('admin-editable-img');
-    img.addEventListener('dragover', e => { e.preventDefault(); img.classList.add('admin-drag-over'); });
-    img.addEventListener('dragleave', () => img.classList.remove('admin-drag-over'));
-    img.addEventListener('drop', async e => {
-      e.preventDefault();
-      img.classList.remove('admin-drag-over');
-      const file = e.dataTransfer.files && e.dataTransfer.files[0];
-      if (!file || !file.type.startsWith('image/')) return;
-      const dataUrl = await fileToDataUrl(file);
-      img.dataset.pendingUpload = 'true';
-      img.dataset.newImageData = dataUrl;
-      img.dataset.newImageMime = file.type;
-      img.src = dataUrl;
-      markDirty();
-      toast('Image staged — click Save & Publish to go live.');
+  async function applyNewImage(el, file, isBackground) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const dataUrl = await fileToDataUrl(file);
+    el.dataset.pendingUpload = 'true';
+    el.dataset.newImageData = dataUrl;
+    el.dataset.newImageMime = file.type;
+    el.dataset.isBackground = isBackground ? 'true' : 'false';
+    if (isBackground) {
+      el.style.backgroundImage = `url('${dataUrl}')`;
+    } else {
+      el.src = dataUrl;
+    }
+    markDirty();
+    toast('Image staged — click Save & Publish to go live.');
+  }
+
+  function openFilePicker(el, isBackground) {
+    const picker = document.createElement('input');
+    picker.type = 'file';
+    picker.accept = 'image/*';
+    picker.style.position = 'fixed';
+    picker.style.top = '-1000px';
+    document.body.appendChild(picker);
+    picker.addEventListener('change', () => {
+      const file = picker.files[0];
+      applyNewImage(el, file, isBackground);
+      picker.remove();
     });
-    img.addEventListener('click', e => {
+    picker.click();
+  }
+
+  function attachImageTarget(el, isBackground) {
+    el.classList.add('admin-img-target');
+    el.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); el.classList.add('admin-drag-over'); });
+    el.addEventListener('dragleave', e => { e.stopPropagation(); el.classList.remove('admin-drag-over'); });
+    el.addEventListener('drop', e => {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('admin-drag-over');
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) applyNewImage(el, file, isBackground);
+    });
+    el.addEventListener('click', e => {
+      if (moveModeOn) return;
       e.preventDefault();
-      const picker = document.createElement('input');
-      picker.type = 'file';
-      picker.accept = 'image/*';
-      picker.onchange = async () => {
-        const file = picker.files[0];
-        if (!file) return;
-        const dataUrl = await fileToDataUrl(file);
-        img.dataset.pendingUpload = 'true';
-        img.dataset.newImageData = dataUrl;
-        img.dataset.newImageMime = file.type;
-        img.src = dataUrl;
-        markDirty();
-        toast('Image staged — click Save & Publish to go live.');
-      };
-      picker.click();
+      e.stopPropagation();
+      openFilePicker(el, isBackground);
+    });
+  }
+
+  // --- Drag-to-reposition ---
+  function attachMovable(el) {
+    el.classList.add('admin-movable');
+    let startX, startY, origX = 0, origY = 0, dragging = false;
+
+    function parseTranslate(str) {
+      const m = /translate\(\s*(-?\d+(?:\.\d+)?)px\s*,\s*(-?\d+(?:\.\d+)?)px\s*\)/.exec(str || '');
+      return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : { x: 0, y: 0 };
+    }
+
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'admin-reset-btn';
+    resetBtn.textContent = '↺';
+    resetBtn.title = 'Reset position';
+    resetBtn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      el.style.transform = '';
+      markDirty();
+    });
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.appendChild(resetBtn);
+
+    el.addEventListener('mousedown', e => {
+      if (!moveModeOn) return;
+      if (e.target === resetBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      dragging = true;
+      el.classList.add('admin-dragging');
+      startX = e.clientX;
+      startY = e.clientY;
+      const cur = parseTranslate(el.style.transform);
+      origX = cur.x;
+      origY = cur.y;
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      el.style.transform = `translate(${origX + dx}px, ${origY + dy}px)`;
+    });
+    document.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('admin-dragging');
+      markDirty();
     });
   }
 
@@ -169,20 +253,9 @@
     injectStyles();
     editModeOn = true;
 
-    const TEXT_SELECTOR = [
-      'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'blockquote',
-      '.stat-num', '.stat-label', '.price', '.menu-item-price',
-      '.hero-eyebrow', '.section-eyebrow', '.footer-brand',
-      'li:not(:has(a)):not(:has(i))'
-    ].join(',');
-
-    let els;
-    try { els = document.querySelectorAll(TEXT_SELECTOR); }
-    catch (e) {
-      // :has() unsupported fallback
-      els = document.querySelectorAll('h1,h2,h3,h4,h5,p,blockquote,.stat-num,.stat-label,.price,.menu-item-price,.hero-eyebrow,.section-eyebrow,.footer-brand');
-    }
-    els.forEach(el => {
+    // --- 1. Text editing ---
+    const TEXT_SELECTOR = 'h1,h2,h3,h4,h5,p,blockquote,.stat-num,.stat-label,.price,.menu-item-price,.hero-eyebrow,.section-eyebrow,.footer-brand,.brand-wordmark,.wm-name';
+    document.querySelectorAll(TEXT_SELECTOR).forEach(el => {
       if (el.closest('#admin-gate,#admin-toolbar')) return;
       if (el.querySelector('img,script,style,input,textarea,select')) return;
       el.contentEditable = 'true';
@@ -190,18 +263,37 @@
       el.addEventListener('input', markDirty);
     });
 
+    // --- 2. <img> tag replacement ---
     document.querySelectorAll('img').forEach(img => {
       if (img.closest('#admin-gate,#admin-toolbar')) return;
-      attachImageHandlers(img);
+      attachImageTarget(img, false);
     });
 
-    // prevent nav links from navigating away while editing
+    // --- 3. CSS background-image div replacement ---
+    document.querySelectorAll('[style*="background-image"]').forEach(el => {
+      if (el.closest('#admin-gate,#admin-toolbar')) return;
+      attachImageTarget(el, true);
+    });
+
+    // --- 4. Drag-to-reposition candidates ---
+    const MOVABLE_SELECTOR = [
+      '.featured-card', '.menu-item', '.viral-card', '.why-card', '.value-card',
+      '.gallery-item', '.gp-item', '.testimonial-wrapper', '.cta-box', '.stat',
+      '.hero-content', '.split-feature-img', '.split-feature-content',
+      '.nav-brand', '.btn', '.order-box', '.about-story-img', '.about-story-text'
+    ].join(',');
+    document.querySelectorAll(MOVABLE_SELECTOR).forEach(el => {
+      if (el.closest('#admin-gate,#admin-toolbar')) return;
+      attachMovable(el);
+    });
+
+    // prevent links from navigating away while editing
     document.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', e => { if (editModeOn) e.preventDefault(); });
     });
 
     showToolbar();
-    toast('Edit mode unlocked. Click text to edit, click/drag images to replace.', 5000);
+    toast('Edit mode ON. Click text to edit. Click/drag onto any photo to replace it. Toggle "Move" to drag-reposition elements.', 6000);
   }
 
   function showToolbar() {
@@ -209,17 +301,28 @@
     bar.id = 'admin-toolbar';
     bar.innerHTML = `
       <span class="status" id="admin-status">No changes</span>
+      <button class="btn-move" id="admin-move-btn">✥ Move: OFF</button>
       <button class="btn-save" id="admin-save-btn">💾 Save &amp; Publish</button>
       <button class="btn-discard" id="admin-discard-btn">Discard</button>
       <button class="btn-logout" id="admin-logout-btn">Exit</button>
     `;
     document.body.appendChild(bar);
     document.getElementById('admin-save-btn').addEventListener('click', publish);
-    document.getElementById('admin-discard-btn').addEventListener('click', () => location.reload());
+    document.getElementById('admin-discard-btn').addEventListener('click', () => {
+      if (confirm('Discard all unsaved changes and reload?')) location.reload();
+    });
     document.getElementById('admin-logout-btn').addEventListener('click', () => {
+      if (dirty && !confirm('You have unsaved changes. Exit anyway?')) return;
       const url = new URL(location.href);
       url.searchParams.delete('admin');
       location.href = url.toString();
+    });
+    document.getElementById('admin-move-btn').addEventListener('click', e => {
+      moveModeOn = !moveModeOn;
+      document.body.classList.toggle('admin-move-mode', moveModeOn);
+      e.target.textContent = moveModeOn ? '✥ Move: ON' : '✥ Move: OFF';
+      e.target.classList.toggle('active', moveModeOn);
+      toast(moveModeOn ? 'Move Mode ON — drag any highlighted block to reposition it.' : 'Move Mode OFF — text/image editing active.', 3000);
     });
   }
 
@@ -261,12 +364,13 @@
   }
 
   async function uploadPendingImages() {
-    const pending = Array.from(document.querySelectorAll('img[data-pending-upload="true"]'));
+    const pending = Array.from(document.querySelectorAll('[data-pending-upload="true"]'));
     let i = 0;
-    for (const img of pending) {
+    for (const el of pending) {
       i++;
-      const dataUrl = img.dataset.newImageData;
-      const mime = img.dataset.newImageMime || 'image/png';
+      const dataUrl = el.dataset.newImageData;
+      const mime = el.dataset.newImageMime || 'image/png';
+      const isBackground = el.dataset.isBackground === 'true';
       const base64 = dataUrl.split(',')[1];
       const ext = extFromMime(mime);
       const filename = `images/admin-upload-${Date.now()}-${i}.${ext}`;
@@ -279,10 +383,15 @@
           branch: REPO_BRANCH
         })
       });
-      img.src = filename;
-      img.removeAttribute('data-pending-upload');
-      img.removeAttribute('data-new-image-data');
-      img.removeAttribute('data-new-image-mime');
+      if (isBackground) {
+        el.style.backgroundImage = `url('${filename}')`;
+      } else {
+        el.src = filename;
+      }
+      el.removeAttribute('data-pending-upload');
+      el.removeAttribute('data-new-image-data');
+      el.removeAttribute('data-new-image-mime');
+      el.removeAttribute('data-is-background');
     }
   }
 
@@ -290,8 +399,12 @@
     const clone = document.documentElement.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
     clone.querySelectorAll('.admin-editable').forEach(el => el.classList.remove('admin-editable'));
-    clone.querySelectorAll('.admin-editable-img').forEach(el => el.classList.remove('admin-editable-img'));
+    clone.querySelectorAll('.admin-img-target').forEach(el => el.classList.remove('admin-img-target'));
+    clone.querySelectorAll('.admin-movable').forEach(el => el.classList.remove('admin-movable'));
     clone.querySelectorAll('.admin-drag-over').forEach(el => el.classList.remove('admin-drag-over'));
+    clone.querySelectorAll('.admin-dragging').forEach(el => el.classList.remove('admin-dragging'));
+    clone.querySelectorAll('.admin-reset-btn').forEach(el => el.remove());
+    clone.classList.remove('admin-move-mode');
     const gate = clone.querySelector('#admin-gate'); if (gate) gate.remove();
     const bar = clone.querySelector('#admin-toolbar'); if (bar) bar.remove();
     const toastEl = clone.querySelector('#admin-toast'); if (toastEl) toastEl.remove();
