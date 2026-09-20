@@ -203,6 +203,9 @@
   // --- Drag-to-reposition ---
   function attachMovable(el) {
     el.classList.add('admin-movable');
+    // Prevent native browser image-drag from hijacking our custom drag
+    el.querySelectorAll('img').forEach(img => { img.draggable = false; });
+    el.addEventListener('dragstart', e => { if (moveModeOn) e.preventDefault(); });
     let startX, startY, origX = 0, origY = 0, dragging = false;
 
     function parseTranslate(str) {
