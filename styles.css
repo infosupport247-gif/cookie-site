@@ -313,8 +313,9 @@ body {
 .navbar {
   position:fixed; top:0; left:0; right:0;
   z-index:1000; padding:1.5rem 0;
-  transition:var(--transition); background:transparent;
+  transition:var(--transition), transform .4s ease; background:transparent;
 }
+.navbar.nav-hidden { transform:translateY(-100%); }
 .navbar.scrolled {
   background:rgba(21,16,10,0.85);
   backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);

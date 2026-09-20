@@ -32,6 +32,20 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// --- Hide navbar on scroll down, show on scroll up ---
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+  const navbar = document.getElementById('navbar');
+  if (!navbar) return;
+  const currentScrollY = window.scrollY;
+  if (currentScrollY > lastScrollY && currentScrollY > 120) {
+    navbar.classList.add('nav-hidden');
+  } else {
+    navbar.classList.remove('nav-hidden');
+  }
+  lastScrollY = currentScrollY;
+});
+
 // --- Mobile menu toggle ---
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
