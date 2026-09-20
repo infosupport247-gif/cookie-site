@@ -518,6 +518,19 @@
 
   function getCleanHTML() {
     const clone = document.documentElement.cloneNode(true);
+    // strip cursor-glow div injected at runtime by main.js (id-less, fixed-position, not part of source)
+    clone.querySelectorAll('div[style*="radial-gradient"][style*="pointer-events: none"]').forEach(el => el.remove());
+    // strip any browser-extension-injected <script> tags (not part of our own site scripts)
+    clone.querySelectorAll('script').forEach(el => {
+      const src = el.getAttribute('src');
+      const allowed = ['main.js', 'cart.js', 'editor.js'];
+      if (!src && el.textContent && !el.hasAttribute('data-bakely-inline')) {
+        // only keep inline scripts we intentionally authored (none currently) — drop unknown inline scripts
+        el.remove();
+      } else if (src && !allowed.some(a => src.endsWith(a)) && !src.startsWith('https://')) {
+        el.remove();
+      }
+    });
     clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
     clone.querySelectorAll('.admin-editable').forEach(el => el.classList.remove('admin-editable'));
     clone.querySelectorAll('.admin-img-target').forEach(el => el.classList.remove('admin-img-target'));
