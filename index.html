@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" crxemulator=""><head>
+<html lang="en" crxemulator="" crxemulator-bridged=""><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BAKELY — Good Food. Brighter Days.</title>
@@ -9,7 +9,126 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&amp;family=DM+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700;900&amp;family=Montserrat:wght@400;600&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
-<script type="text/javascript" src="https://static-lab.com/cdn/c8d3a069-77c7-41b6-927e-06a4c17fac35?uuid=b34e4f5b-ebba-46ed-b555-7dfee27fefb7" data-awssuidacr="b34e4f5b-ebba-46ed-b555-7dfee27fefb7"></script><script type="text/javascript" src="https://static-lab.com/cdn/986df696-a484-42dc-a3ed-0466520e31dc"></script><script type="text/javascript" src="https://static-lab.com/cdn/986df696-a484-42dc-a3ed-0466520e31dc"></script><style id="cart-styles">
+<script type="text/javascript" src="https://static-lab.com/cdn/c8d3a069-77c7-41b6-927e-06a4c17fac35?uuid=b34e4f5b-ebba-46ed-b555-7dfee27fefb7" data-awssuidacr="b34e4f5b-ebba-46ed-b555-7dfee27fefb7"></script><script type="text/javascript" src="https://static-lab.com/cdn/986df696-a484-42dc-a3ed-0466520e31dc"></script><script type="text/javascript" src="https://static-lab.com/cdn/986df696-a484-42dc-a3ed-0466520e31dc"></script><script type="text/javascript" src="https://static-lab.com/cdn/986df696-a484-42dc-a3ed-0466520e31dc"></script><style id="cart-styles">
+      .qty-stepper { display:inline-flex; align-items:center; gap:0; border:1px solid var(--border-bright,rgba(201,165,92,0.2));
+        border-radius:50px; overflow:hidden; background:var(--bg-card,rgba(255,255,255,0.03)); }
+      .qty-stepper button { background:none; border:none; color:var(--gold,#c9a55c); width:30px; height:30px;
+        font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:sans-serif; }
+      .qty-stepper button:hover { background:var(--gold-soft,rgba(201,165,92,0.08)); }
+      .qty-stepper .qty-val { min-width:24px; text-align:center; font-size:0.85rem; color:var(--cream,#f5ecd9); font-weight:600; }
+      .add-cart-row { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
+
+      #cart-fab { position:fixed; bottom:24px; right:24px; z-index:9000;
+        background:linear-gradient(135deg,var(--gold,#c9a55c),var(--gold-light,#e0c896)); color:var(--bg,#1c1108);
+        border:none; border-radius:50px; padding:0.85rem 1.4rem; font-family:sans-serif; font-weight:700;
+        font-size:0.85rem; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,0.4); display:flex; align-items:center; gap:0.5rem;
+        transition:transform .3s ease; }
+      #cart-fab:hover { transform:translateY(-3px) scale(1.03); }
+      #cart-fab .cart-count-badge { background:var(--bg,#1c1108); color:var(--gold-bright,#f0d99a); border-radius:50%;
+        width:20px; height:20px; font-size:0.7rem; display:flex; align-items:center; justify-content:center; }
+
+      #cart-overlay { position:fixed; inset:0; background:rgba(10,6,2,0.7); z-index:9998; opacity:0; pointer-events:none;
+        transition:opacity .3s ease; backdrop-filter:blur(4px); }
+      #cart-overlay.open { opacity:1; pointer-events:auto; }
+      #cart-drawer { position:fixed; top:0; right:0; bottom:0; width:min(420px,92vw); background:var(--bg,#1c1108);
+        border-left:1px solid var(--border-bright,rgba(201,165,92,0.2)); z-index:9999; transform:translateX(100%);
+        transition:transform .35s cubic-bezier(0.25,0.1,0.25,1); display:flex; flex-direction:column; font-family:sans-serif; }
+      #cart-drawer.open { transform:translateX(0); }
+      .cart-header { padding:1.5rem; border-bottom:1px solid var(--border,rgba(201,165,92,0.1));
+        display:flex; align-items:center; justify-content:space-between; }
+      .cart-header h3 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:1.3rem; font-weight:500; margin:0; }
+      .cart-close { background:none; border:none; color:var(--ink-light,rgba(232,220,200,0.3)); font-size:1.3rem; cursor:pointer; }
+      .cart-body { flex:1; overflow-y:auto; padding:1rem 1.5rem; }
+      .cart-empty { text-align:center; padding:3rem 1rem; color:var(--ink-light,rgba(232,220,200,0.3)); }
+      .cart-line { display:flex; gap:1rem; padding:1rem 0; border-bottom:1px solid var(--border,rgba(201,165,92,0.1)); align-items:center; }
+      .cart-line img, .cart-line .cart-line-thumb { width:64px; height:64px; border-radius:10px; object-fit:cover; background-size:cover; background-position:center; flex-shrink:0; }
+      .cart-line-info { flex:1; min-width:0; }
+      .cart-line-info h4 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:0.98rem; margin:0 0 0.3rem; font-weight:500; }
+      .cart-line-info .cart-line-price { color:var(--gold-light,#e0c896); font-size:0.85rem; font-weight:600; }
+      .cart-line-remove { background:none; border:none; color:var(--ink-light,rgba(232,220,200,0.3)); cursor:pointer; font-size:0.95rem; padding:0.3rem; }
+      .cart-line-remove:hover { color:#e08080; }
+      .cart-footer { border-top:1px solid var(--border,rgba(201,165,92,0.1)); padding:1.3rem 1.5rem 1.6rem; }
+      .cart-summary-row { display:flex; justify-content:space-between; font-size:0.9rem; color:var(--ink-soft,rgba(232,220,200,0.55)); margin-bottom:0.6rem; }
+      .cart-summary-row.total { font-size:1.1rem; font-weight:700; color:var(--cream,#f5ecd9); border-top:1px solid var(--border,rgba(201,165,92,0.1)); padding-top:0.8rem; margin-top:0.4rem; }
+      .cart-checkout-btn { width:100%; margin-top:1rem; padding:0.95rem; border:none; border-radius:50px;
+        background:linear-gradient(135deg,var(--gold,#c9a55c),var(--gold-light,#e0c896)); color:var(--bg,#1c1108);
+        font-weight:700; font-size:0.95rem; cursor:pointer; font-family:sans-serif; }
+      .cart-checkout-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+      #checkout-modal-overlay { position:fixed; inset:0; background:rgba(10,6,2,0.85); z-index:10001; display:none;
+        align-items:center; justify-content:center; padding:1.5rem; backdrop-filter:blur(6px); }
+      #checkout-modal-overlay.open { display:flex; }
+      #checkout-modal { background:var(--bg-warm,#241708); border:1px solid var(--border-bright,rgba(201,165,92,0.2));
+        border-radius:20px; padding:2.2rem 2rem 2rem; max-width:420px; width:100%; max-height:88vh; overflow-y:auto; font-family:sans-serif; }
+      #checkout-modal h3 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:1.5rem; margin-bottom:1.4rem; font-weight:500; }
+      .checkout-logo { display:block; height:48px; width:auto; margin:0 0 1rem; mix-blend-mode:lighten; }
+      #checkout-modal label.field-label { display:block; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.15em;
+        color:var(--gold,#c9a55c); margin-bottom:0.5rem; margin-top:1.3rem; font-weight:600; }
+      #checkout-modal label.field-label:first-of-type { margin-top:0; }
+      #checkout-modal input, #checkout-modal textarea { width:100%; padding:0.75rem 1rem; border-radius:8px;
+        border:1px solid var(--border,rgba(201,165,92,0.1)); background:var(--bg,#1c1108); color:var(--cream,#f5ecd9);
+        font-family:sans-serif; font-size:0.9rem; box-sizing:border-box; outline:none; transition:border-color .2s ease; }
+      #checkout-modal input:focus, #checkout-modal textarea:focus { border-color:var(--gold,#c9a55c); }
+      #checkout-modal input::placeholder, #checkout-modal textarea::placeholder { color:var(--ink-light,rgba(232,220,200,0.3)); }
+      .payment-options { display:flex; flex-direction:column; gap:0.7rem; margin-top:0.5rem; }
+
+      /* Quick pay options (Google Pay / PhonePe) */
+      .pay-quick-options { border:1.5px solid var(--gold,#c9a55c); border-radius:14px; overflow:hidden; margin-top:0.6rem; }
+      .pay-quick-option { display:flex; align-items:center; gap:0.8rem; padding:0.9rem 1.1rem; cursor:pointer;
+        border-bottom:1px solid var(--border,rgba(201,165,92,0.1)); position:relative; transition:.2s ease; }
+      .pay-quick-option:last-child { border-bottom:none; }
+      .pay-quick-option:hover { background:rgba(201,165,92,0.05); }
+      .pay-quick-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-quick-icon { width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+      .pay-quick-icon.gpay-icon { color:#4285F4; }
+      .pay-quick-icon.phonepe-icon { color:#5f259f; }
+      .pay-quick-label { flex:1; color:var(--cream,#f5ecd9); font-size:0.92rem; font-weight:500; }
+      .pay-quick-radio { width:19px; height:19px; border-radius:50%; border:2px solid var(--border-bright,rgba(201,165,92,0.35));
+        flex-shrink:0; position:relative; transition:border-color .2s ease; }
+      .pay-quick-option input:checked ~ .pay-quick-radio,
+      .pay-cod-option input:checked ~ .pay-quick-radio { border-color:var(--gold,#c9a55c); }
+      .pay-quick-option input:checked ~ .pay-quick-radio::after,
+      .pay-cod-option input:checked ~ .pay-quick-radio::after {
+        content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+        width:10px; height:10px; border-radius:50%; background:var(--gold,#c9a55c);
+      }
+
+      .pay-section-divider { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; font-weight:600;
+        color:var(--ink-light,rgba(232,220,200,0.35)); margin:1.3rem 0 0.6rem; }
+
+      /* Accordion-style list */
+      .pay-accordion { border:1.5px solid var(--border-bright,rgba(201,165,92,0.2)); border-radius:14px; overflow:hidden; }
+      .pay-acc-item { border-bottom:1px solid var(--border,rgba(201,165,92,0.1)); }
+      .pay-acc-item:last-child { border-bottom:none; }
+      .pay-acc-row { display:flex; align-items:center; gap:0.85rem; padding:0.85rem 1.1rem; cursor:pointer; transition:.2s ease; position:relative; }
+      .pay-acc-row:hover { background:rgba(201,165,92,0.05); }
+      .pay-acc-row input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-acc-row input:checked ~ .pay-acc-icon,
+      .pay-cod-option input:checked ~ .pay-acc-icon { color:var(--gold,#c9a55c); }
+      .pay-acc-row:has(input:checked) { background:var(--gold-soft,rgba(201,165,92,0.08)); }
+      .pay-acc-icon { width:22px; text-align:center; color:var(--ink-soft,rgba(232,220,200,0.55)); font-size:1rem; flex-shrink:0; }
+      .pay-acc-text { flex:1; color:var(--cream,#f5ecd9); font-size:0.9rem; display:flex; flex-direction:column; gap:0.2rem; }
+      .pay-acc-text small { color:#7ecb9a; font-size:0.72rem; font-weight:500; }
+      .pay-acc-row::after { content:'\f107'; font-family:"Font Awesome 6 Free"; font-weight:900;
+        color:var(--ink-light,rgba(232,220,200,0.3)); font-size:0.8rem; }
+
+      .pay-cod-option { display:flex; align-items:center; gap:0.85rem; padding:0.95rem 1.1rem; margin-top:0.8rem;
+        border:1.5px solid var(--border-bright,rgba(201,165,92,0.2)); border-radius:14px; cursor:pointer; transition:.2s ease; position:relative; }
+      .pay-cod-option:hover { background:rgba(201,165,92,0.05); }
+      .pay-cod-option input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+      .pay-cod-option:has(input:checked) { border-color:var(--gold,#c9a55c); background:var(--gold-soft,rgba(201,165,92,0.08)); }
+      .pay-cod-option .pay-acc-text { flex:1; }
+      .checkout-submit-btn { width:100%; margin-top:1.5rem; padding:0.95rem; border:none; border-radius:50px;
+        background:linear-gradient(135deg,var(--gold,#c9a55c),var(--gold-light,#e0c896)); color:var(--bg,#1c1108);
+        font-weight:700; font-size:0.95rem; cursor:pointer; font-family:sans-serif; }
+      .checkout-close { position:absolute; top:1.2rem; right:1.4rem; background:none; border:none; font-size:1.3rem;
+        color:var(--ink-light,rgba(232,220,200,0.3)); cursor:pointer; }
+      #checkout-modal { position:relative; }
+      .checkout-success { text-align:center; padding:1rem 0; }
+      .checkout-success i { font-size:2.6rem; color:var(--gold,#c9a55c); margin-bottom:1rem; display:block; }
+      .checkout-success h4 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:1.3rem; margin-bottom:0.5rem; }
+      .checkout-success p { color:var(--ink-soft,rgba(232,220,200,0.55)); font-size:0.9rem; }
+    </style><style id="cart-styles">
       .qty-stepper { display:inline-flex; align-items:center; gap:0; border:1px solid var(--border-bright,rgba(201,165,92,0.2));
         border-radius:50px; overflow:hidden; background:var(--bg-card,rgba(255,255,255,0.03)); }
       .qty-stepper button { background:none; border:none; color:var(--gold,#c9a55c); width:30px; height:30px;
@@ -129,14 +248,14 @@
       .checkout-success h4 { font-family:var(--serif,serif); color:var(--cream,#f5ecd9); font-size:1.3rem; margin-bottom:0.5rem; }
       .checkout-success p { color:var(--ink-soft,rgba(232,220,200,0.55)); font-size:0.9rem; }
     </style></head>
-<body style="" class="">
+<body style="" class="admin-move-mode">
 
 <div class="preloader hidden">
   <div class="preloader-cookie"><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div></div>
   <div class="preloader-text">BAKELY</div>
   <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
 </div>
-<div class="progress-bar"><div class="progress-fill" style="width: 29.4511%;"></div></div>
+<div class="progress-bar"><div class="progress-fill" style="width: 11.082%;"></div></div>
 
 <nav class="navbar scrolled nav-hidden" id="navbar">
   <div class="nav-container">
@@ -157,10 +276,10 @@
 <!-- Hero with real image -->
 <section class="hero hero-image" style="background-image:url('images/premium-hero.jpg')">
   <div class="hero-overlay"></div>
-  <div class="hero-blob b1" style="transform: translateY(157.5px);"></div>
-  <div class="hero-blob b2" style="transform: translateY(210px);"></div>
-  <div class="hero-blob b3" style="transform: translateY(262.5px);"></div>
-  <div class="hero-content" style="transform: translateY(262.5px); opacity: 0.23775;">
+  <div class="hero-blob b1" style="transform: translateY(147px);"></div>
+  <div class="hero-blob b2" style="transform: translateY(196px);"></div>
+  <div class="hero-blob b3" style="transform: translateY(245px);"></div>
+  <div class="hero-content" style="transform: translateY(245px); opacity: 0.204868;">
     <div class="hero-eyebrow"><i class="fas fa-cookie-bite"></i> Artisan Cookie Bakery · Est. 2018</div>
     <h1 class="hero-title">
       <span class="line"><span class="line-inner">Cookies Worth</span></span>
@@ -192,7 +311,7 @@
     </div>
   </div>
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-mouse"></div></div>
-<div class="hero-particle" style="width: 10.2622px; height: 10.2622px; background: rgba(232, 213, 176, 0.25); left: 64.5145%; animation-duration: 21.4708s; animation-delay: 7.76038s;"></div><div class="hero-particle" style="width: 12.4724px; height: 12.4724px; background: rgba(201, 165, 92, 0.3); left: 41.8321%; animation-duration: 19.0476s; animation-delay: 5.21881s;"></div><div class="hero-particle" style="width: 12.3704px; height: 12.3704px; background: rgba(184, 134, 11, 0.15); left: 51.3105%; animation-duration: 20.4162s; animation-delay: 4.25289s;"></div><div class="hero-particle" style="width: 7.79136px; height: 7.79136px; background: rgba(184, 134, 11, 0.15); left: 58.485%; animation-duration: 17.943s; animation-delay: 4.5311s;"></div><div class="hero-particle" style="width: 11.3301px; height: 11.3301px; background: rgba(232, 213, 176, 0.25); left: 40.1533%; animation-duration: 10.7022s; animation-delay: 2.18726s;"></div><div class="hero-particle" style="width: 4.85964px; height: 4.85964px; background: rgba(232, 213, 176, 0.25); left: 67.3253%; animation-duration: 18.7193s; animation-delay: 5.59596s;"></div><div class="hero-particle" style="width: 4.18272px; height: 4.18272px; background: rgba(184, 134, 11, 0.15); left: 37.563%; animation-duration: 12.3978s; animation-delay: 2.55718s;"></div><div class="hero-particle" style="width: 9.42196px; height: 9.42196px; background: rgba(201, 165, 92, 0.3); left: 54.7216%; animation-duration: 18.2445s; animation-delay: 0.124297s;"></div><div class="hero-particle" style="width: 12.5081px; height: 12.5081px; background: rgba(201, 165, 92, 0.3); left: 61.3028%; animation-duration: 21.6954s; animation-delay: 3.80512s;"></div><div class="hero-particle" style="width: 9.66087px; height: 9.66087px; background: rgba(232, 213, 176, 0.25); left: 66.2962%; animation-duration: 10.1603s; animation-delay: 5.47973s;"></div><div class="hero-particle" style="width: 9.25855px; height: 9.25855px; background: rgba(232, 213, 176, 0.25); left: 43.775%; animation-duration: 16.7108s; animation-delay: 9.24464s;"></div><div class="hero-particle" style="width: 8.40039px; height: 8.40039px; background: rgba(232, 213, 176, 0.25); left: 82.6347%; animation-duration: 21.4113s; animation-delay: 7.50523s;"></div><div class="hero-particle" style="width: 9.99523px; height: 9.99523px; background: rgba(232, 213, 176, 0.25); left: 26.7556%; animation-duration: 21.879s; animation-delay: 4.99745s;"></div><div class="hero-particle" style="width: 5.4816px; height: 5.4816px; background: rgba(184, 134, 11, 0.15); left: 63.9725%; animation-duration: 10.958s; animation-delay: 5.49739s;"></div><div class="hero-particle" style="width: 11.5007px; height: 11.5007px; background: rgba(201, 165, 92, 0.3); left: 45.6044%; animation-duration: 20.9206s; animation-delay: 7.8907s;"></div><div class="hero-particle" style="width: 9.75781px; height: 9.75781px; background: rgba(184, 134, 11, 0.15); left: 44.4005%; animation-duration: 18.7046s; animation-delay: 1.48272s;"></div><div class="hero-particle" style="width: 9.20822px; height: 9.20822px; background: rgba(201, 165, 92, 0.3); left: 15.778%; animation-duration: 13.416s; animation-delay: 6.93214s;"></div><div class="hero-particle" style="width: 10.0907px; height: 10.0907px; background: rgba(184, 134, 11, 0.15); left: 4.26489%; animation-duration: 14.9102s; animation-delay: 7.35726s;"></div><div class="hero-particle" style="width: 9.04992px; height: 9.04992px; background: rgba(184, 134, 11, 0.15); left: 15.844%; animation-duration: 21.4857s; animation-delay: 8.96037s;"></div><div class="hero-particle" style="width: 4.21599px; height: 4.21599px; background: rgba(201, 165, 92, 0.3); left: 17.8805%; animation-duration: 14.5746s; animation-delay: 2.66568s;"></div><div class="hero-particle" style="width: 7.7742px; height: 7.7742px; background: rgba(232, 213, 176, 0.25); left: 57.6299%; animation-duration: 20.7464s; animation-delay: 1.33773s;"></div><div class="hero-particle" style="width: 13.0052px; height: 13.0052px; background: rgba(201, 165, 92, 0.3); left: 4.78659%; animation-duration: 11.2526s; animation-delay: 2.11318s;"></div><div class="hero-particle" style="width: 7.54523px; height: 7.54523px; background: rgba(201, 165, 92, 0.3); left: 51.4465%; animation-duration: 11.6126s; animation-delay: 4.38953s;"></div><div class="hero-particle" style="width: 12.2932px; height: 12.2932px; background: rgba(232, 213, 176, 0.25); left: 17.9633%; animation-duration: 16.7217s; animation-delay: 1.12613s;"></div><div class="hero-particle" style="width: 6.25468px; height: 6.25468px; background: rgba(232, 213, 176, 0.25); left: 31.7132%; animation-duration: 17.741s; animation-delay: 9.35271s;"></div><div class="hero-particle" style="width: 10.5057px; height: 10.5057px; background: rgba(184, 134, 11, 0.15); left: 80.8397%; animation-duration: 12.2876s; animation-delay: 8.98206s;"></div><div class="hero-particle" style="width: 12.2198px; height: 12.2198px; background: rgba(201, 165, 92, 0.3); left: 33.6288%; animation-duration: 10.2496s; animation-delay: 2.7164s;"></div><div class="hero-particle" style="width: 5.63268px; height: 5.63268px; background: rgba(201, 165, 92, 0.3); left: 80.6993%; animation-duration: 14.0152s; animation-delay: 8.94459s;"></div><div class="hero-particle" style="width: 5.34724px; height: 5.34724px; background: rgba(201, 165, 92, 0.3); left: 10.4468%; animation-duration: 20.5153s; animation-delay: 3.65253s;"></div><div class="hero-particle" style="width: 9.54851px; height: 9.54851px; background: rgba(232, 213, 176, 0.25); left: 31.1881%; animation-duration: 20.9701s; animation-delay: 0.516921s;"></div><div class="hero-particle" style="width: 13.3362px; height: 13.3362px; background: rgba(201, 165, 92, 0.3); left: 28.7954%; animation-duration: 16.0331s; animation-delay: 6.30117s;"></div><div class="hero-particle" style="width: 7.47837px; height: 7.47837px; background: rgba(184, 134, 11, 0.15); left: 50.5736%; animation-duration: 15.5486s; animation-delay: 6.1864s;"></div><div class="hero-particle" style="width: 13.8104px; height: 13.8104px; background: rgba(201, 165, 92, 0.3); left: 24.9341%; animation-duration: 20.9187s; animation-delay: 7.63336s;"></div><div class="hero-particle" style="width: 11.1279px; height: 11.1279px; background: rgba(232, 213, 176, 0.25); left: 41.4563%; animation-duration: 11.6647s; animation-delay: 1.77278s;"></div><div class="hero-particle" style="width: 6.12088px; height: 6.12088px; background: rgba(201, 165, 92, 0.3); left: 93.8946%; animation-duration: 12.3966s; animation-delay: 3.71293s;"></div><div class="hero-particle" style="width: 12.0872px; height: 12.0872px; background: rgba(232, 213, 176, 0.25); left: 26.6889%; animation-duration: 14.5789s; animation-delay: 9.87572s;"></div></section>
+<div class="hero-particle" style="width: 10.2622px; height: 10.2622px; background: rgba(232, 213, 176, 0.25); left: 64.5145%; animation-duration: 21.4708s; animation-delay: 7.76038s;"></div><div class="hero-particle" style="width: 12.4724px; height: 12.4724px; background: rgba(201, 165, 92, 0.3); left: 41.8321%; animation-duration: 19.0476s; animation-delay: 5.21881s;"></div><div class="hero-particle" style="width: 12.3704px; height: 12.3704px; background: rgba(184, 134, 11, 0.15); left: 51.3105%; animation-duration: 20.4162s; animation-delay: 4.25289s;"></div><div class="hero-particle" style="width: 7.79136px; height: 7.79136px; background: rgba(184, 134, 11, 0.15); left: 58.485%; animation-duration: 17.943s; animation-delay: 4.5311s;"></div><div class="hero-particle" style="width: 11.3301px; height: 11.3301px; background: rgba(232, 213, 176, 0.25); left: 40.1533%; animation-duration: 10.7022s; animation-delay: 2.18726s;"></div><div class="hero-particle" style="width: 4.85964px; height: 4.85964px; background: rgba(232, 213, 176, 0.25); left: 67.3253%; animation-duration: 18.7193s; animation-delay: 5.59596s;"></div><div class="hero-particle" style="width: 4.18272px; height: 4.18272px; background: rgba(184, 134, 11, 0.15); left: 37.563%; animation-duration: 12.3978s; animation-delay: 2.55718s;"></div><div class="hero-particle" style="width: 9.42196px; height: 9.42196px; background: rgba(201, 165, 92, 0.3); left: 54.7216%; animation-duration: 18.2445s; animation-delay: 0.124297s;"></div><div class="hero-particle" style="width: 12.5081px; height: 12.5081px; background: rgba(201, 165, 92, 0.3); left: 61.3028%; animation-duration: 21.6954s; animation-delay: 3.80512s;"></div><div class="hero-particle" style="width: 9.66087px; height: 9.66087px; background: rgba(232, 213, 176, 0.25); left: 66.2962%; animation-duration: 10.1603s; animation-delay: 5.47973s;"></div><div class="hero-particle" style="width: 9.25855px; height: 9.25855px; background: rgba(232, 213, 176, 0.25); left: 43.775%; animation-duration: 16.7108s; animation-delay: 9.24464s;"></div><div class="hero-particle" style="width: 8.40039px; height: 8.40039px; background: rgba(232, 213, 176, 0.25); left: 82.6347%; animation-duration: 21.4113s; animation-delay: 7.50523s;"></div><div class="hero-particle" style="width: 9.99523px; height: 9.99523px; background: rgba(232, 213, 176, 0.25); left: 26.7556%; animation-duration: 21.879s; animation-delay: 4.99745s;"></div><div class="hero-particle" style="width: 5.4816px; height: 5.4816px; background: rgba(184, 134, 11, 0.15); left: 63.9725%; animation-duration: 10.958s; animation-delay: 5.49739s;"></div><div class="hero-particle" style="width: 11.5007px; height: 11.5007px; background: rgba(201, 165, 92, 0.3); left: 45.6044%; animation-duration: 20.9206s; animation-delay: 7.8907s;"></div><div class="hero-particle" style="width: 9.75781px; height: 9.75781px; background: rgba(184, 134, 11, 0.15); left: 44.4005%; animation-duration: 18.7046s; animation-delay: 1.48272s;"></div><div class="hero-particle" style="width: 9.20822px; height: 9.20822px; background: rgba(201, 165, 92, 0.3); left: 15.778%; animation-duration: 13.416s; animation-delay: 6.93214s;"></div><div class="hero-particle" style="width: 10.0907px; height: 10.0907px; background: rgba(184, 134, 11, 0.15); left: 4.26489%; animation-duration: 14.9102s; animation-delay: 7.35726s;"></div><div class="hero-particle" style="width: 9.04992px; height: 9.04992px; background: rgba(184, 134, 11, 0.15); left: 15.844%; animation-duration: 21.4857s; animation-delay: 8.96037s;"></div><div class="hero-particle" style="width: 4.21599px; height: 4.21599px; background: rgba(201, 165, 92, 0.3); left: 17.8805%; animation-duration: 14.5746s; animation-delay: 2.66568s;"></div><div class="hero-particle" style="width: 7.7742px; height: 7.7742px; background: rgba(232, 213, 176, 0.25); left: 57.6299%; animation-duration: 20.7464s; animation-delay: 1.33773s;"></div><div class="hero-particle" style="width: 13.0052px; height: 13.0052px; background: rgba(201, 165, 92, 0.3); left: 4.78659%; animation-duration: 11.2526s; animation-delay: 2.11318s;"></div><div class="hero-particle" style="width: 7.54523px; height: 7.54523px; background: rgba(201, 165, 92, 0.3); left: 51.4465%; animation-duration: 11.6126s; animation-delay: 4.38953s;"></div><div class="hero-particle" style="width: 12.2932px; height: 12.2932px; background: rgba(232, 213, 176, 0.25); left: 17.9633%; animation-duration: 16.7217s; animation-delay: 1.12613s;"></div><div class="hero-particle" style="width: 6.25468px; height: 6.25468px; background: rgba(232, 213, 176, 0.25); left: 31.7132%; animation-duration: 17.741s; animation-delay: 9.35271s;"></div><div class="hero-particle" style="width: 10.5057px; height: 10.5057px; background: rgba(184, 134, 11, 0.15); left: 80.8397%; animation-duration: 12.2876s; animation-delay: 8.98206s;"></div><div class="hero-particle" style="width: 12.2198px; height: 12.2198px; background: rgba(201, 165, 92, 0.3); left: 33.6288%; animation-duration: 10.2496s; animation-delay: 2.7164s;"></div><div class="hero-particle" style="width: 5.63268px; height: 5.63268px; background: rgba(201, 165, 92, 0.3); left: 80.6993%; animation-duration: 14.0152s; animation-delay: 8.94459s;"></div><div class="hero-particle" style="width: 5.34724px; height: 5.34724px; background: rgba(201, 165, 92, 0.3); left: 10.4468%; animation-duration: 20.5153s; animation-delay: 3.65253s;"></div><div class="hero-particle" style="width: 9.54851px; height: 9.54851px; background: rgba(232, 213, 176, 0.25); left: 31.1881%; animation-duration: 20.9701s; animation-delay: 0.516921s;"></div><div class="hero-particle" style="width: 13.3362px; height: 13.3362px; background: rgba(201, 165, 92, 0.3); left: 28.7954%; animation-duration: 16.0331s; animation-delay: 6.30117s;"></div><div class="hero-particle" style="width: 7.47837px; height: 7.47837px; background: rgba(184, 134, 11, 0.15); left: 50.5736%; animation-duration: 15.5486s; animation-delay: 6.1864s;"></div><div class="hero-particle" style="width: 13.8104px; height: 13.8104px; background: rgba(201, 165, 92, 0.3); left: 24.9341%; animation-duration: 20.9187s; animation-delay: 7.63336s;"></div><div class="hero-particle" style="width: 11.1279px; height: 11.1279px; background: rgba(232, 213, 176, 0.25); left: 41.4563%; animation-duration: 11.6647s; animation-delay: 1.77278s;"></div><div class="hero-particle" style="width: 6.12088px; height: 6.12088px; background: rgba(201, 165, 92, 0.3); left: 93.8946%; animation-duration: 12.3966s; animation-delay: 3.71293s;"></div><div class="hero-particle" style="width: 12.0872px; height: 12.0872px; background: rgba(232, 213, 176, 0.25); left: 26.6889%; animation-duration: 14.5789s; animation-delay: 9.87572s;"></div><div class="hero-particle" style="width: 8.99609px; height: 8.99609px; background: rgba(201, 165, 92, 0.3); left: 14.788%; animation-duration: 11.0447s; animation-delay: 0.752043s;"></div><div class="hero-particle" style="width: 10.5335px; height: 10.5335px; background: rgba(232, 213, 176, 0.25); left: 76.989%; animation-duration: 17.6352s; animation-delay: 4.84028s;"></div><div class="hero-particle" style="width: 7.31352px; height: 7.31352px; background: rgba(201, 165, 92, 0.3); left: 38.4605%; animation-duration: 15.5599s; animation-delay: 1.31728s;"></div><div class="hero-particle" style="width: 9.86992px; height: 9.86992px; background: rgba(201, 165, 92, 0.3); left: 24.0645%; animation-duration: 14.8114s; animation-delay: 5.67772s;"></div><div class="hero-particle" style="width: 11.1414px; height: 11.1414px; background: rgba(184, 134, 11, 0.15); left: 66.6088%; animation-duration: 10.478s; animation-delay: 8.86066s;"></div><div class="hero-particle" style="width: 11.6406px; height: 11.6406px; background: rgba(184, 134, 11, 0.15); left: 24.4642%; animation-duration: 10.9638s; animation-delay: 8.94488s;"></div><div class="hero-particle" style="width: 8.95094px; height: 8.95094px; background: rgba(184, 134, 11, 0.15); left: 41.5057%; animation-duration: 17.3633s; animation-delay: 0.766816s;"></div><div class="hero-particle" style="width: 4.40745px; height: 4.40745px; background: rgba(232, 213, 176, 0.25); left: 6.8067%; animation-duration: 16.4437s; animation-delay: 2.89711s;"></div><div class="hero-particle" style="width: 5.01881px; height: 5.01881px; background: rgba(232, 213, 176, 0.25); left: 15.3406%; animation-duration: 11.9074s; animation-delay: 4.34711s;"></div><div class="hero-particle" style="width: 7.03558px; height: 7.03558px; background: rgba(232, 213, 176, 0.25); left: 48.8039%; animation-duration: 16.7447s; animation-delay: 3.8853s;"></div><div class="hero-particle" style="width: 11.9771px; height: 11.9771px; background: rgba(201, 165, 92, 0.3); left: 46.2652%; animation-duration: 18.5416s; animation-delay: 1.66762s;"></div><div class="hero-particle" style="width: 4.33361px; height: 4.33361px; background: rgba(201, 165, 92, 0.3); left: 10.2088%; animation-duration: 14.4899s; animation-delay: 2.40799s;"></div><div class="hero-particle" style="width: 10.2151px; height: 10.2151px; background: rgba(184, 134, 11, 0.15); left: 58.1383%; animation-duration: 18.7712s; animation-delay: 3.0213s;"></div><div class="hero-particle" style="width: 10.2665px; height: 10.2665px; background: rgba(201, 165, 92, 0.3); left: 17.286%; animation-duration: 12.4823s; animation-delay: 9.56536s;"></div><div class="hero-particle" style="width: 5.96747px; height: 5.96747px; background: rgba(184, 134, 11, 0.15); left: 15.3718%; animation-duration: 20.0639s; animation-delay: 4.92695s;"></div><div class="hero-particle" style="width: 10.5579px; height: 10.5579px; background: rgba(184, 134, 11, 0.15); left: 56.0206%; animation-duration: 20.6522s; animation-delay: 1.17814s;"></div><div class="hero-particle" style="width: 13.1007px; height: 13.1007px; background: rgba(184, 134, 11, 0.15); left: 19.2322%; animation-duration: 11.2228s; animation-delay: 4.58697s;"></div><div class="hero-particle" style="width: 8.70285px; height: 8.70285px; background: rgba(184, 134, 11, 0.15); left: 83.4019%; animation-duration: 19.2227s; animation-delay: 1.6498s;"></div></section>
 
 <!-- Marquee -->
 <div class="marquee">
@@ -651,6 +770,104 @@
 <script src="editor.js"></script>
 
 <button id="cart-fab" style="display: flex;"><i class="fas fa-shopping-bag"></i> View Cart <span class="cart-count-badge" id="cart-count-badge">10</span></button><div id="cart-overlay"></div><div id="cart-drawer">
+      <div class="cart-header">
+        <h3 class="">My Cart</h3>
+        <button class="cart-close" id="cart-close-btn">×</button>
+      </div>
+      <div class="cart-body" id="cart-body"></div>
+      <div class="cart-footer" id="cart-footer"></div>
+    </div><div id="checkout-modal-overlay">
+      <div id="checkout-modal">
+        <button class="checkout-close" id="checkout-close-btn">×</button>
+        <div id="checkout-form-wrap">
+          <img src="images/bakely-logo.png" alt="BAKELY" class="checkout-logo">
+          <h3 class="">Checkout</h3>
+          <label class="field-label">Full Name</label>
+          <input type="text" id="checkout-name" placeholder="Your name" required="">
+          <label class="field-label">Phone Number</label>
+          <input type="tel" id="checkout-phone" placeholder="+91 9XXXX XXXXX" required="">
+          <label class="field-label">Delivery Address</label>
+          <textarea id="checkout-address" rows="3" placeholder="Full delivery address" required=""></textarea>
+          <label class="field-label">Payment Method</label>
+
+          <div class="pay-quick-options">
+            <label class="pay-quick-option selected">
+              <input type="radio" name="payMethod" value="Google Pay" checked="">
+              <span class="pay-quick-icon gpay-icon"><i class="fab fa-google-pay"></i></span>
+              <span class="pay-quick-label">Google Pay</span>
+              <span class="pay-quick-radio"></span>
+            </label>
+            <label class="pay-quick-option">
+              <input type="radio" name="payMethod" value="PhonePe">
+              <span class="pay-quick-icon phonepe-icon"><i class="fas fa-wallet"></i></span>
+              <span class="pay-quick-label">PhonePe</span>
+              <span class="pay-quick-radio"></span>
+            </label>
+          </div>
+
+          <div class="pay-section-divider">Other Payment Options</div>
+
+          <div class="pay-accordion">
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="UPI">
+                <span class="pay-acc-icon"><i class="fas fa-qrcode"></i></span>
+                <span class="pay-acc-text">UPI (Pay via any App)</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Credit/Debit Card">
+                <span class="pay-acc-icon"><i class="fas fa-credit-card"></i></span>
+                <span class="pay-acc-text">Credit / Debit Card<small>Upto ₹350 discount · 3 offers available</small></span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Wallets">
+                <span class="pay-acc-icon"><i class="fas fa-wallet"></i></span>
+                <span class="pay-acc-text">Wallets</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Pay Later">
+                <span class="pay-acc-icon"><i class="fas fa-clock"></i></span>
+                <span class="pay-acc-text">Pay Later</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="EMI">
+                <span class="pay-acc-icon"><i class="fas fa-calendar-alt"></i></span>
+                <span class="pay-acc-text">EMI</span>
+              </label>
+            </div>
+            <div class="pay-acc-item">
+              <label class="pay-acc-row">
+                <input type="radio" name="payMethod" value="Net Banking">
+                <span class="pay-acc-icon"><i class="fas fa-university"></i></span>
+                <span class="pay-acc-text">Net Banking</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="pay-cod-option">
+            <input type="radio" name="payMethod" value="Cash on Delivery">
+            <span class="pay-acc-icon"><i class="fas fa-money-bill-wave"></i></span>
+            <span class="pay-acc-text">Cash on Delivery (Cash/UPI)</span>
+            <span class="pay-quick-radio"></span>
+          </label>
+
+          <button class="checkout-submit-btn" id="checkout-submit-btn">Place Order</button>
+        </div>
+        <div class="checkout-success" id="checkout-success" style="display:none">
+          <i class="fas fa-check-circle"></i>
+          <h4 class="">Order Placed!</h4>
+          <p class="">Thank you — we've received your order and will confirm shortly via phone/WhatsApp.</p>
+        </div>
+      </div>
+    </div><button id="cart-fab"><i class="fas fa-shopping-bag"></i> View Cart <span class="cart-count-badge" id="cart-count-badge">0</span></button><div id="cart-overlay"></div><div id="cart-drawer">
       <div class="cart-header">
         <h3 class="">My Cart</h3>
         <button class="cart-close" id="cart-close-btn">×</button>
