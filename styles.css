@@ -7,38 +7,38 @@
 html { scroll-behavior:smooth; font-size:16px; }
 body {
   font-family:'DM Sans',system-ui,sans-serif;
-  background:#2b0a12;
-  color:#f0dcc8;
+  background:#faf3e8;
+  color:#3a2418;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 :root {
-  --bg:#2b0a12;
-  --bg-warm:#38101a;
-  --bg-card:rgba(255,255,255,0.03);
-  --bg-card-solid:#38101a;
-  --espresso:#451625;
-  --espresso-light:#5c1f31;
-  --gold:#c9a55c;
-  --gold-light:#e0c896;
-  --gold-bright:#f0d99a;
-  --gold-champagne:#f6e7c1;
+  --bg:#faf3e8;
+  --bg-warm:#f3e8d6;
+  --bg-card:rgba(255,255,255,0.6);
+  --bg-card-solid:#fffaf2;
+  --espresso:#f3e0c4;
+  --espresso-light:#fbeed9;
+  --gold:#b8863f;
+  --gold-light:#c9a55c;
+  --gold-bright:#a8722e;
+  --gold-champagne:#e8c98a;
   --gold-antique:#8a6e2f;
-  --gold-soft:rgba(201,165,92,0.08);
-  --gold-glow:rgba(201,165,92,0.15);
-  --cream:#f5ecd9;
-  --cream-soft:rgba(245,236,217,0.7);
-  --cream-dim:rgba(245,236,217,0.4);
-  --ink:#f0dcc8;
-  --ink-soft:rgba(240,220,200,0.55);
-  --ink-light:rgba(240,220,200,0.3);
-  --border:rgba(201,165,92,0.12);
-  --border-bright:rgba(201,165,92,0.22);
-  --shadow-sm:0 4px 20px rgba(0,0,0,0.35);
-  --shadow-md:0 10px 40px rgba(0,0,0,0.45);
-  --shadow-lg:0 24px 80px rgba(0,0,0,0.55);
-  --shadow-gold:0 8px 40px rgba(201,165,92,0.12);
+  --gold-soft:rgba(184,134,63,0.1);
+  --gold-glow:rgba(184,134,63,0.18);
+  --cream:#3a2418;
+  --cream-soft:rgba(58,36,24,0.75);
+  --cream-dim:rgba(58,36,24,0.45);
+  --ink:#3a2418;
+  --ink-soft:rgba(58,36,24,0.6);
+  --ink-light:rgba(58,36,24,0.35);
+  --border:rgba(184,134,63,0.18);
+  --border-bright:rgba(184,134,63,0.35);
+  --shadow-sm:0 4px 20px rgba(58,36,24,0.08);
+  --shadow-md:0 10px 40px rgba(58,36,24,0.1);
+  --shadow-lg:0 24px 80px rgba(58,36,24,0.14);
+  --shadow-gold:0 8px 40px rgba(184,134,63,0.15);
   --serif:'Cormorant Garamond',serif;
   --sans:'DM Sans',sans-serif;
   --radius:16px;
@@ -318,7 +318,7 @@ body {
 }
 .navbar.nav-hidden { transform:translateY(-100%); }
 .navbar.scrolled {
-  background:rgba(21,16,10,0.85);
+  background:rgba(250,243,232,0.9);
   backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
   padding:1rem 0; border-bottom:1px solid var(--border);
 }
