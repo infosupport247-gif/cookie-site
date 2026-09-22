@@ -765,11 +765,11 @@
   }
 
   function getToken() {
-    let token = sessionStorage.getItem('bakely_admin_token');
-    if (!token) {
-      token = prompt('Enter your GitHub Personal Access Token (repo write scope). This is only stored in this browser tab and never saved to the site:');
-      if (token) sessionStorage.setItem('bakely_admin_token', token.trim());
-    }
+    // Always clear any previously stored token and prompt for a fresh one.
+    // This prevents stale/expired tokens from silently causing 401 errors.
+    sessionStorage.removeItem('bakely_admin_token');
+    let token = prompt('Enter your GitHub Personal Access Token (repo scope). Get one at https://github.com/settings/tokens:');
+    if (token) sessionStorage.setItem('bakely_admin_token', token.trim());
     return token ? token.trim() : null;
   }
 
