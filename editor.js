@@ -1,5 +1,5 @@
 /* ===================================================
-   BAKELY Admin Live Editor v2
+   BAKELY Admin Live Editor v3
    Inert unless ?admin=1 is in the URL.
    Two-layer security:
      1) Password gate (SHA-256 checked client-side)
@@ -12,6 +12,8 @@
      - Replace <img> tags (click or drag-drop a file)
      - Replace CSS background-image divs (click or drag-drop)
      - Drag-to-reposition any element (Move Mode toggle)
+     - Resize any section/box/image (Resize Mode toggle — drag handles)
+     - Adjust font size of any text (click text → font panel with presets)
      - Publishes straight to the GitHub repo (GitHub Pages rebuilds)
    =================================================== */
 (function () {
@@ -28,9 +30,12 @@
 
   let editModeOn = false;
   let moveModeOn = false;
+  let resizeModeOn = false;
   let dirty = false;
   let colorPanelOpen = false;
+  let fontPanelOpen = false;
   const colorChanges = {}; // { '--gold': '#c9a55c', ... } only entries the admin actually changed
+  let saving = false;
 
   const EDITABLE_COLOR_VARS = [
     { key: '--bg', label: 'Page Background' },
@@ -42,7 +47,6 @@
     { key: '--ink', label: 'Body Text Color' },
     { key: '--border', label: 'Border / Divider' }
   ];
-  let saving = false;
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -63,6 +67,7 @@
         background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; font-weight:700;
         cursor:pointer; font-size:0.9rem; }
       #admin-gate .err { color:#e08080; font-size:0.8rem; margin-top:0.6rem; min-height:1em; }
+
       #admin-toolbar { position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
         background:#1c1108; border:1px solid #c9a55c; border-radius:50px; z-index:99998;
         display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem;
@@ -72,12 +77,18 @@
       #admin-toolbar .btn-save { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
       #admin-toolbar .btn-move { background:#3d2817; color:#e8dcc8; }
       #admin-toolbar .btn-move.active { background:linear-gradient(135deg,#e08080,#c95c5c); color:#fff; }
+      #admin-toolbar .btn-resize { background:#3d2817; color:#e8dcc8; }
+      #admin-toolbar .btn-resize.active { background:linear-gradient(135deg,#5b9bd5,#3a7cc2); color:#fff; }
+      #admin-toolbar .btn-colors { background:#3d2817; color:#e8dcc8; }
+      #admin-toolbar .btn-colors.active { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
       #admin-toolbar .btn-discard { background:#3d2817; color:#e8dcc8; }
       #admin-toolbar .btn-logout { background:transparent; color:#e8dcc8; border:1px solid #5a4020 !important; }
       #admin-toolbar .status { color:#e0c896; font-size:0.72rem; padding:0 0.3rem; }
+
       .admin-editable { outline:1px dashed rgba(201,165,92,0.35); outline-offset:2px; cursor:text; }
       .admin-editable:hover { outline-color:rgba(201,165,92,0.8); background:rgba(201,165,92,0.06); }
       .admin-editable:focus { outline:2px solid #c9a55c; background:rgba(201,165,92,0.1); }
+
       .admin-img-target { cursor:pointer !important; position:relative; }
       .admin-img-target:hover { outline:2px dashed #c9a55c; outline-offset:-2px; filter:brightness(0.8); }
       .admin-img-target:hover::after {
@@ -86,19 +97,67 @@
         z-index:500; pointer-events:none; font-family:sans-serif; border-top-right-radius:6px;
       }
       .admin-drag-over { outline:3px solid #e0c896 !important; filter:brightness(1.3) !important; }
+
+      /* --- Move Mode --- */
       .admin-move-mode .admin-movable { cursor:grab !important; }
       .admin-move-mode .admin-movable:hover { outline:2px dashed #e08080 !important; outline-offset:2px; }
       .admin-movable.admin-dragging { cursor:grabbing !important; opacity:0.85; z-index:9000 !important; outline:2px solid #e08080 !important; }
       .admin-move-mode [contenteditable] { cursor:grab !important; }
-      #admin-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%);
-        background:#1c1108; border:1px solid #c9a55c; color:#f5ecd9; padding:0.8rem 1.4rem;
-        border-radius:8px; z-index:100000; font-family:sans-serif; font-size:0.85rem;
-        box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:90vw; }
-      .admin-reset-btn { position:absolute; top:-10px; right:-10px; z-index:600;
-        background:#c9a55c; color:#1c1108; border:none; border-radius:50%;
-        width:22px; height:22px; font-size:0.7rem; cursor:pointer; display:none;
-        align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.4); }
-      .admin-movable[style*="translate"]:hover .admin-reset-btn { display:flex; }
+
+      /* --- Resize Mode --- */
+      .admin-resize-mode .admin-resizable { cursor:nwse-resize !important; }
+      .admin-resize-mode .admin-resizable:hover { outline:2px dashed #5b9bd5 !important; outline-offset:2px; }
+      .admin-resizable.admin-resizing { z-index:8000 !important; opacity:0.9; }
+      .admin-resize-handle {
+        position:absolute; width:14px; height:14px; background:#5b9bd5; border:2px solid #1c1108;
+        border-radius:50%; z-index:5000; opacity:0; transition:opacity 0.15s; box-shadow:0 2px 8px rgba(0,0,0,0.4);
+      }
+      .admin-resize-mode .admin-resizable:hover .admin-resize-handle { opacity:1; }
+      .admin-resizable.admin-resizing .admin-resize-handle { opacity:1; }
+      .admin-resize-handle.nw { top:-7px; left:-7px; cursor:nwse-resize; }
+      .admin-resize-handle.ne { top:-7px; right:-7px; cursor:nesw-resize; }
+      .admin-resize-handle.sw { bottom:-7px; left:-7px; cursor:nesw-resize; }
+      .admin-resize-handle.se { bottom:-7px; right:-7px; cursor:nwse-resize; }
+      .admin-resize-handle:hover { background:#7bb8e8; transform:scale(1.2); }
+      .admin-reset-size-btn { position:absolute; top:-10px; left:-10px; z-index:600;
+        background:#5b9bd5; color:#1c1108; border:none; border-radius:50%;
+        width:22px; height:22px; font-size:0.65rem; cursor:pointer; display:none;
+        align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.4); font-weight:700;
+      }
+      .admin-resizable[style*="width"]:hover .admin-reset-size-btn { display:flex; }
+
+      /* --- Font Panel --- */
+      #admin-font-panel {
+        position:fixed; background:#1c1108; border:1px solid #c9a55c; border-radius:12px;
+        padding:1rem; z-index:99996; font-family:sans-serif; box-shadow:0 10px 40px rgba(0,0,0,0.5);
+        min-width:210px; max-width:260px; transform:scale(0.95); opacity:0; pointer-events:none;
+        transition:transform 0.15s ease, opacity 0.15s ease;
+      }
+      #admin-font-panel.open { transform:scale(1); opacity:1; pointer-events:auto; }
+      #admin-font-panel h4 { color:#f0d99a; font-size:0.8rem; margin-bottom:0.7rem; letter-spacing:0.03em; }
+      #admin-font-panel .fp-current { color:#e8dcc8; font-size:0.72rem; margin-bottom:0.6rem; }
+      #admin-font-panel .fp-presets { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.7rem; }
+      #admin-font-panel .fp-presets button {
+        border:none; border-radius:6px; padding:0.35rem 0.55rem; background:#3d2817; color:#e8dcc8;
+        font-size:0.7rem; cursor:pointer; font-family:sans-serif; border:1px solid transparent;
+      }
+      #admin-font-panel .fp-presets button:hover { background:#5a4020; border-color:#c9a55c; }
+      #admin-font-panel .fp-presets button.active { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; border-color:#c9a55c; }
+      #admin-font-panel .fp-custom { display:flex; gap:0.4rem; margin-bottom:0.7rem; }
+      #admin-font-panel .fp-custom input {
+        flex:1; padding:0.4rem 0.5rem; border-radius:6px; border:1px solid #3d2817;
+        background:#241708; color:#f5ecd9; font-size:0.72rem; font-family:sans-serif; outline:none;
+      }
+      #admin-font-panel .fp-custom input:focus { border-color:#c9a55c; }
+      #admin-font-panel .fp-custom button {
+        border:none; border-radius:6px; padding:0.4rem 0.7rem; background:linear-gradient(135deg,#c9a55c,#e0c896);
+        color:#1c1108; font-weight:700; cursor:pointer; font-size:0.72rem; white-space:nowrap;
+      }
+      #admin-font-panel .fp-close {
+        position:absolute; top:5px; right:7px; background:none; border:none; color:#e08080;
+        font-size:0.9rem; cursor:pointer; padding:2px 4px; line-height:1;
+      }
+      #admin-font-panel .fp-close:hover { color:#ff9999; }
 
       #admin-color-panel { position:fixed; top:0; right:0; bottom:0; width:280px;
         background:#1c1108; border-left:1px solid #c9a55c; z-index:99997;
@@ -120,8 +179,12 @@
       #admin-color-panel .btn-close-colors { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
       #admin-toolbar .btn-colors { background:#3d2817; color:#e8dcc8; }
       #admin-toolbar .btn-colors.active { background:linear-gradient(135deg,#c9a55c,#e0c896); color:#1c1108; }
-    `;
 
+      #admin-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%);
+        background:#1c1108; border:1px solid #c9a55c; color:#f5ecd9; padding:0.8rem 1.4rem;
+        border-radius:8px; z-index:100000; font-family:sans-serif; font-size:0.85rem;
+        box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:90vw; }
+    `;
     const style = document.createElement('style');
     style.id = 'admin-edit-styles';
     style.textContent = css;
@@ -228,23 +291,23 @@
       if (file) applyNewImage(el, file, isBackground);
     });
     el.addEventListener('click', e => {
-      if (moveModeOn) return;
+      if (moveModeOn || resizeModeOn) return;
       e.preventDefault();
       e.stopPropagation();
       openFilePicker(el, isBackground);
     });
   }
 
-  // --- Drag-to-reposition ---
+  // --- Drag-to-reposition (Move Mode) ---
   function attachMovable(el) {
     el.classList.add('admin-movable');
-    // Prevent native browser image-drag from hijacking our custom drag
     el.querySelectorAll('img').forEach(img => { img.draggable = false; });
     el.addEventListener('dragstart', e => { if (moveModeOn) e.preventDefault(); });
     let startX, startY, origX = 0, origY = 0, dragging = false;
 
     function parseTranslate(str) {
       const m = /translate\(\s*(-?\d+(?:\.\d+)?)px\s*,\s*(-?\d+(?:\.\d+)?)px\s*\)/.exec(str || '');
+
       return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : { x: 0, y: 0 };
     }
 
@@ -262,7 +325,8 @@
 
     el.addEventListener('mousedown', e => {
       if (!moveModeOn) return;
-      if (e.target === resetBtn) return;
+      if (e.target === resetBtn || e.target.closest('.admin-reset-btn')) return;
+      if (e.target.closest('.admin-resize-handle')) return;
       e.preventDefault();
       e.stopPropagation();
       dragging = true;
@@ -287,42 +351,275 @@
     });
   }
 
+  // --- Resize handles (Resize Mode) ---
+  function attachResizeHandles(el) {
+    el.classList.add('admin-resizable');
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    const positions = ['nw', 'ne', 'sw', 'se'];
+    positions.forEach(pos => {
+      const handle = document.createElement('div');
+      handle.className = 'admin-resize-handle ' + pos;
+      handle.dataset.handle = pos;
+      el.appendChild(handle);
+    });
+
+    // Reset size button
+    const resetSizeBtn = document.createElement('button');
+    resetSizeBtn.className = 'admin-reset-size-btn';
+    resetSizeBtn.textContent = '↺';
+    resetSizeBtn.title = 'Reset size';
+    resetSizeBtn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      el.style.width = '';
+      el.style.height = '';
+      el.style.minWidth = '';
+      el.style.minHeight = '';
+      el.style.maxWidth = '';
+      el.style.maxHeight = '';
+      markDirty();
+    });
+    el.appendChild(resetSizeBtn);
+
+    let resizing = false;
+    let startX, startY, startW, startH, startL, startT, activeHandle = null;
+
+    el.addEventListener('mousedown', e => {
+      if (!resizeModeOn) return;
+      const handle = e.target.closest('.admin-resize-handle');
+      if (!handle) return;
+      if (e.target === resetSizeBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      resizing = true;
+      activeHandle = handle.dataset.handle;
+      el.classList.add('admin-resizing');
+      startX = e.clientX;
+      startY = e.clientY;
+      startW = el.offsetWidth;
+      startH = el.offsetHeight;
+      startL = el.offsetLeft;
+      startT = el.offsetTop;
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!resizing || !activeHandle) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      let newW = startW, newH = startH, newL = startL, newT = startT;
+
+      if (activeHandle.includes('e')) newW = Math.max(80, startW + dx);
+      if (activeHandle.includes('w')) { newW = Math.max(80, startW - dx); newL = startL + dx; }
+      if (activeHandle.includes('s')) newH = Math.max(40, startH + dy);
+      if (activeHandle.includes('n')) { newH = Math.max(40, startH - dy); newT = startT + dy; }
+
+      el.style.width = newW + 'px';
+      el.style.height = newH + 'px';
+      if (activeHandle.includes('w') || activeHandle.includes('n')) {
+        el.style.left = newL + 'px';
+        el.style.top = newT + 'px';
+      }
+      markDirty();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!resizing) return;
+      resizing = false;
+      activeHandle = null;
+      el.classList.remove('admin-resizing');
+    });
+  }
+
+  // --- Font Size Panel ---
+  function showFontPanel(targetEl, clickX, clickY) {
+    if (!targetEl) return;
+    if (fontPanelOpen) closeFontPanel();
+    buildFontPanel();
+    const panel = document.getElementById('admin-font-panel');
+    if (!panel) return;
+
+    const rect = targetEl.getBoundingClientRect();
+    let left = clickX + 15;
+    let top = clickY + 15;
+
+    const panelWidth = 230;
+    const panelHeight = 300;
+    if (left + panelWidth > window.innerWidth - 10) left = clickX - panelWidth - 15;
+    if (top + panelHeight > window.innerHeight - 10) top = clickY - panelHeight - 15;
+    if (left < 10) left = 10;
+    if (top < 10) top = 10;
+
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+    panel.classList.add('open');
+    fontPanelOpen = true;
+    panel._targetEl = targetEl;
+
+    const currentSize = parseInt(getComputedStyle(targetEl).fontSize) || 16;
+    const currentEl = panel.querySelector('.fp-current');
+    if (currentEl) currentEl.textContent = 'Current: ' + currentSize + 'px';
+
+    panel.querySelectorAll('.fp-presets button').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.size) === currentSize);
+    });
+
+    // Update custom input
+    const custInput = panel.querySelector('#fp-custom-input');
+    if (custInput) custInput.value = currentSize;
+  }
+
+  function closeFontPanel() {
+    const panel = document.getElementById('admin-font-panel');
+    if (panel) panel.classList.remove('open');
+    fontPanelOpen = false;
+    panel._targetEl = null;
+  }
+
+  function buildFontPanel() {
+    if (document.getElementById('admin-font-panel')) return;
+    const panel = document.createElement('div');
+    panel.id = 'admin-font-panel';
+    panel.innerHTML = `
+      <button class="fp-close" id="admin-font-close" title="Close">✕</button>
+      <h4>🔤 Font Size</h4>
+      <div class="fp-current">—</div>
+      <div class="fp-presets">
+        ${[12,14,16,18,20,24,30,36,48].map(s => `<button data-size="${s}">${s}px</button>`).join('')}
+      </div>
+      <div class="fp-custom">
+        <input type="text" placeholder="Custom px" id="fp-custom-input">
+        <button id="fp-custom-apply">Apply</button>
+      </div>
+    `;
+    document.body.appendChild(panel);
+
+    panel.querySelectorAll('.fp-presets button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const size = parseInt(btn.dataset.size);
+        const target = panel._targetEl;
+        if (target) {
+          target.style.fontSize = size + 'px';
+          markDirty();
+          toast('Font size: ' + size + 'px');
+        }
+        panel.querySelectorAll('.fp-presets button').forEach(b => b.classList.toggle('active', parseInt(b.dataset.size) === size));
+        panel.querySelector('.fp-current').textContent = 'Current: ' + size + 'px';
+        const custInput = panel.querySelector('#fp-custom-input');
+        if (custInput) custInput.value = size;
+      });
+    });
+
+    document.getElementById('admin-font-close').addEventListener('click', e => {
+      e.stopPropagation();
+      closeFontPanel();
+    });
+
+    document.getElementById('fp-custom-apply').addEventListener('click', () => {
+      const val = document.getElementById('fp-custom-input').value.trim();
+      const size = parseInt(val);
+      const target = panel._targetEl;
+      if (!size || size < 6 || size > 300) { toast('Enter a valid size (6-300px)'); return; }
+      if (target) {
+        target.style.fontSize = size + 'px';
+        markDirty();
+        toast('Font size: ' + size + 'px');
+      }
+      panel.querySelector('.fp-current').textContent = 'Current: ' + size + 'px';
+      panel.querySelectorAll('.fp-presets button').forEach(b => b.classList.toggle('active', parseInt(b.dataset.size) === size));
+    });
+
+    document.getElementById('fp-custom-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('fp-custom-apply').click();
+    });
+
+    // Close font panel when clicking outside
+    panel.addEventListener('click', e => {
+      if (e.target === panel || e.target.closest('#admin-font-close')) return;
+    });
+  }
+
   function enableEditing() {
     injectStyles();
     editModeOn = true;
 
     // --- 1. Text editing ---
-    const TEXT_SELECTOR = 'h1,h2,h3,h4,h5,p,blockquote,.stat-num,.stat-label,.price,.menu-item-price,.hero-eyebrow,.section-eyebrow,.footer-brand,.brand-wordmark,.wm-name';
+    const TEXT_SELECTOR = 'h1,h2,h3,h4,h5,h6,p,blockquote,.stat-num,.stat-label,.price,.menu-item-price,.hero-eyebrow,.section-eyebrow,.footer-brand,.brand-wordmark,.wm-name,.nav-brand,.bakely-logo-img,.hero-logo,.brand-mark,.tagline,.subtitle';
     document.querySelectorAll(TEXT_SELECTOR).forEach(el => {
       if (el.closest('#admin-gate,#admin-toolbar')) return;
       if (el.querySelector('img,script,style,input,textarea,select')) return;
       el.contentEditable = 'true';
       el.classList.add('admin-editable');
       el.addEventListener('input', markDirty);
+
+      // Show font panel when text is clicked (in edit mode, not move/resize)
+      el.addEventListener('click', e => {
+        if (!editModeOn) return;
+        if (moveModeOn || resizeModeOn) return;
+        if (e.target === el && !el.closest('#admin-font-panel')) {
+          setTimeout(() => showFontPanel(el, e.clientX, e.clientY), 50);
+        }
+      });
+    });
+
+    // Allow font panel to work on elements that aren't in TEXT_SELECTOR but have text
+    document.querySelectorAll('.admin-editable').forEach(el => {
+      el.addEventListener('click', e => {
+        if (moveModeOn || resizeModeOn) return;
+        if (e.target === el && !el.closest('#admin-font-panel')) {
+          setTimeout(() => showFontPanel(el, e.clientX, e.clientY), 50);
+        }
+      });
     });
 
     // --- 2. <img> tag replacement ---
     document.querySelectorAll('img').forEach(img => {
-      if (img.closest('#admin-gate,#admin-toolbar')) return;
+      if (img.closest('#admin-gate,#admin-toolbar,#admin-font-panel')) return;
       attachImageTarget(img, false);
     });
 
     // --- 3. CSS background-image div replacement ---
     document.querySelectorAll('[style*="background-image"]').forEach(el => {
-      if (el.closest('#admin-gate,#admin-toolbar')) return;
+      if (el.closest('#admin-gate,#admin-toolbar,#admin-font-panel')) return;
       attachImageTarget(el, true);
     });
 
-    // --- 4. Drag-to-reposition candidates ---
+    // --- 4. Drag-to-reposition candidates (Move Mode) ---
     const MOVABLE_SELECTOR = [
       '.featured-card', '.menu-item', '.viral-card', '.why-card', '.value-card',
       '.gallery-item', '.gp-item', '.testimonial-wrapper', '.cta-box', '.stat',
       '.hero-content', '.split-feature-img', '.split-feature-content',
-      '.nav-brand', '.btn', '.order-box', '.about-story-img', '.about-story-text'
+      '.nav-brand', '.btn', '.order-box', '.about-story-img', '.about-story-text',
+      '.bakely-logo-img', '.hero-logo', '.brand-mark', '.footer-brand',
+      'section', '.card', '.box', '.container', '.logo-container', 'header', 'footer',
+      '.navbar', '.hero', '.section-inner', '.content-wrap', '.sidebar'
     ].join(',');
     document.querySelectorAll(MOVABLE_SELECTOR).forEach(el => {
-      if (el.closest('#admin-gate,#admin-toolbar')) return;
+      if (el.closest('#admin-gate,#admin-toolbar,#admin-font-panel')) return;
       attachMovable(el);
+    });
+
+    // --- 5. Resize candidates (Resize Mode) — broad: every visible block ---
+    const RESIZABLE_SELECTOR = [
+      '.featured-card', '.menu-item', '.viral-card', '.why-card', '.value-card',
+      '.gallery-item', '.gp-item', '.testimonial-wrapper', '.cta-box', '.stat',
+      '.hero-content', '.split-feature-img', '.split-feature-content',
+      '.nav-brand', '.btn', '.order-box', '.about-story-img', '.about-story-text',
+      '.bakely-logo-img', '.hero-logo', '.brand-mark', '.footer-brand',
+      'section', '.card', '.box', '.container', '.logo-container', 'header', 'footer',
+      '.navbar', '.hero', '.section-inner', '.content-wrap', '.sidebar',
+      '.split-feature-section', '.testimonial-section', '.categories-section',
+      '.delivery-section', '.faq-section', '.cta-section', '.footer-section',
+      '.about-section', '.gallery-section', '.menu-section', '.order-section',
+      '.hero-eyebrow', '.hero-title', '.hero-subtitle', '.section-eyebrow',
+      '.brand-wordmark', '.wm-name', '.tagline', '.subtitle',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote',
+      '.stat-num', '.stat-label', '.price', '.menu-item-price'
+    ].join(',');
+    document.querySelectorAll(RESIZABLE_SELECTOR).forEach(el => {
+      if (el.closest('#admin-gate,#admin-toolbar,#admin-font-panel')) return;
+      // Skip elements that are too small to meaningfully resize
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 30 || rect.height < 20) return;
+      attachResizeHandles(el);
     });
 
     // prevent links from navigating away while editing
@@ -331,7 +628,7 @@
     });
 
     showToolbar();
-    toast('Edit mode ON. Click text to edit. Click/drag onto any photo to replace it. Toggle "Move" to drag-reposition elements.', 6000);
+    toast('Edit mode ON. Click text to edit & adjust font size. Toggle Move to drag-reposition. Toggle Resize to drag-handle resize sections/boxes. Click/drag onto any photo to replace it.', 7000);
   }
 
   function showToolbar() {
@@ -340,6 +637,7 @@
     bar.innerHTML = `
       <span class="status" id="admin-status">No changes</span>
       <button class="btn-move" id="admin-move-btn">✥ Move: OFF</button>
+      <button class="btn-resize" id="admin-resize-btn">↕ Resize: OFF</button>
       <button class="btn-colors" id="admin-colors-btn">🎨 Colors</button>
       <button class="btn-save" id="admin-save-btn">💾 Save &amp; Publish</button>
       <button class="btn-discard" id="admin-discard-btn">Discard</button>
@@ -358,10 +656,25 @@
     });
     document.getElementById('admin-move-btn').addEventListener('click', e => {
       moveModeOn = !moveModeOn;
+      if (moveModeOn) resizeModeOn = false;
       document.body.classList.toggle('admin-move-mode', moveModeOn);
+      document.body.classList.toggle('admin-resize-mode', false);
       e.target.textContent = moveModeOn ? '✥ Move: ON' : '✥ Move: OFF';
       e.target.classList.toggle('active', moveModeOn);
-      toast(moveModeOn ? 'Move Mode ON — drag any highlighted block to reposition it.' : 'Move Mode OFF — text/image editing active.', 3000);
+      const resizeBtn = document.getElementById('admin-resize-btn');
+      if (resizeBtn) { resizeBtn.textContent = '↕ Resize: OFF'; resizeBtn.classList.remove('active'); }
+      toast(moveModeOn ? 'Move Mode ON — drag any highlighted block to reposition it. Drag logo/boxes anywhere.' : 'Move Mode OFF.', 3000);
+    });
+    document.getElementById('admin-resize-btn').addEventListener('click', e => {
+      resizeModeOn = !resizeModeOn;
+      if (resizeModeOn) moveModeOn = false;
+      document.body.classList.toggle('admin-resize-mode', resizeModeOn);
+      document.body.classList.toggle('admin-move-mode', false);
+      e.target.textContent = resizeModeOn ? '↕ Resize: ON' : '↕ Resize: OFF';
+      e.target.classList.toggle('active', resizeModeOn);
+      const moveBtn = document.getElementById('admin-move-btn');
+      if (moveBtn) { moveBtn.textContent = '✥ Move: OFF'; moveBtn.classList.remove('active'); }
+      toast(resizeModeOn ? 'Resize Mode ON — hover any section/box/logo and drag the handles to resize. Use ↺ to reset.' : 'Resize Mode OFF.', 3000);
     });
     document.getElementById('admin-colors-btn').addEventListener('click', e => {
       toggleColorPanel();
@@ -376,8 +689,8 @@
 
   // --- Color Panel ---
   function rgbaToHex(str) {
-    // supports 'rgba(r,g,b,a)' or plain hex; returns {hex, alpha}
     const m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\)/.exec(str);
+
     if (!m) return { hex: str.trim(), alpha: 1 };
     const [, r, g, b, a] = m;
     const hex = '#' + [r, g, b].map(n => parseInt(n).toString(16).padStart(2, '0')).join('');
@@ -451,7 +764,6 @@
     if (panel) panel.classList.toggle('open', colorPanelOpen);
   }
 
-
   function getToken() {
     let token = sessionStorage.getItem('bakely_admin_token');
     if (!token) {
@@ -518,20 +830,18 @@
 
   function getCleanHTML() {
     const clone = document.documentElement.cloneNode(true);
-    // strip cursor-glow div injected at runtime by main.js (id-less, fixed-position, not part of source)
+    // strip cursor-glow div injected at runtime by main.js
     clone.querySelectorAll('div[style*="radial-gradient"][style*="pointer-events: none"]').forEach(el => el.remove());
-    // strip stray attributes injected by browser extensions (e.g. crxemulator markers)
+    // strip stray attributes injected by browser extensions
     ['crxemulator', 'crxemulator-bridged'].forEach(attr => {
       if (clone.hasAttribute(attr)) clone.removeAttribute(attr);
     });
-    // WHITELIST approach: only allow scripts we explicitly trust. Any other <script>
-    // (extension-injected trackers/CDNs like static-lab.com etc.) is stripped on publish.
+    // WHITELIST approach: only allow scripts we explicitly trust
     const ALLOWED_SCRIPT_SRC_SUFFIXES = ['main.js', 'cart.js', 'editor.js'];
-    const ALLOWED_SCRIPT_HOSTS = []; // add trusted 3rd-party script hosts here if ever needed
+    const ALLOWED_SCRIPT_HOSTS = [];
     clone.querySelectorAll('script').forEach(el => {
       const src = el.getAttribute('src');
       if (!src) {
-        // drop all inline scripts — we never intentionally author inline <script> in source pages
         el.remove();
         return;
       }
@@ -546,20 +856,25 @@
     clone.querySelectorAll('.admin-movable').forEach(el => el.classList.remove('admin-movable'));
     clone.querySelectorAll('.admin-drag-over').forEach(el => el.classList.remove('admin-drag-over'));
     clone.querySelectorAll('.admin-dragging').forEach(el => el.classList.remove('admin-dragging'));
+    clone.querySelectorAll('.admin-resizable').forEach(el => el.classList.remove('admin-resizable'));
+    clone.querySelectorAll('.admin-resizing').forEach(el => el.classList.remove('admin-resizing'));
     clone.querySelectorAll('.admin-reset-btn').forEach(el => el.remove());
+    clone.querySelectorAll('.admin-reset-size-btn').forEach(el => el.remove());
+    clone.querySelectorAll('.admin-resize-handle').forEach(el => el.remove());
     clone.classList.remove('admin-move-mode');
+    clone.classList.remove('admin-resize-mode');
     const gate = clone.querySelector('#admin-gate'); if (gate) gate.remove();
     const bar = clone.querySelector('#admin-toolbar'); if (bar) bar.remove();
     const colorPanel = clone.querySelector('#admin-color-panel'); if (colorPanel) colorPanel.remove();
+    const fontPanel = clone.querySelector('#admin-font-panel'); if (fontPanel) fontPanel.remove();
     const toastEl = clone.querySelector('#admin-toast'); if (toastEl) toastEl.remove();
     const styleEl = clone.querySelector('#admin-edit-styles'); if (styleEl) styleEl.remove();
-    // strip any inline CSS var overrides used for live color preview — the real
-    // values live in styles.css, published separately by publishColorChanges()
+    // strip inline CSS var overrides used for live color preview
     if (clone.hasAttribute('style')) {
       const s = clone.getAttribute('style') || '';
-      if (/--[a-z-]+\s*:/.test(s)) clone.removeAttribute('style');
+      if (/--[a-z-]+\s*:\s*/.test(s)) clone.removeAttribute('style');
     }
-    return '<!DOCTYPE html>\n' + clone.outerHTML;
+    return '<!DOCTYPE html>\\n' + clone.outerHTML;
   }
 
   async function publishColorChanges() {
@@ -567,14 +882,16 @@
     if (keys.length === 0) return;
     toast('Updating site colors...', 5000);
     const current = await ghRequest(`styles.css?ref=${REPO_BRANCH}`, { method: 'GET' });
-    let css = decodeURIComponent(escape(atob(current.content.replace(/\n/g, ''))));
+    let css = decodeURIComponent(escape(atob(current.content.replace(/\\n/g, ''))));
     keys.forEach(key => {
       const value = colorChanges[key];
-      const re = new RegExp(`(${key.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*:\\s*)[^;]+;`);
+      const re = new RegExp(`(${key.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\$&')})\\s*:\\s*[^;]+;`);
+
       if (re.test(css)) {
         css = css.replace(re, `$1${value};`);
       } else {
-        css = css.replace(/:root\s*{/, `:root {\n  ${key}: ${value};`);
+        css = css.replace(/:root\\s*{/, `:root {\\n  ${key}: ${value};`);
+
       }
     });
     await ghRequest('styles.css', {
@@ -619,6 +936,14 @@
       if (btn) { btn.disabled = false; btn.textContent = '💾 Save & Publish'; }
     }
   }
+
+  // Close font panel when clicking anywhere outside it
+  document.addEventListener('click', e => {
+    if (!fontPanelOpen) return;
+    if (e.target.closest('#admin-font-panel')) return;
+    if (e.target.closest('.admin-editable')) return;
+    closeFontPanel();
+  });
 
   window.addEventListener('beforeunload', e => {
     if (dirty) { e.preventDefault(); e.returnValue = ''; }
